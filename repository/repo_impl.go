@@ -15,8 +15,7 @@ func (r *Repository) Save(data interface{}) {
 	panic(result.Error)
 }
 
-func (r *Repository) FindAll() []interface{} {
-	var data []interface{}
+func (r *Repository) FindAll(data interface{}) interface{} {
 	result := r.Db.Find(&data)
 	panic(result.Error)
 	return data
@@ -29,5 +28,9 @@ func (r *Repository) FindById(id int, data interface{}) (interface{}, error) {
 	} else {
 		return data, result.Error
 	}
+
+}
+
+func (r *Repository) Delete(id int) {
 
 }
