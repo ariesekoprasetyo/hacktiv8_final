@@ -8,5 +8,4 @@ type RepositoryPhoto interface {
 	Delete(PhotoId int)
 	FindById(PhotoId int) (repository.Photo, error)
 	FindAll() []repository.Photo
-	FindByUserName(username string) (repository.Photo, error)
 }

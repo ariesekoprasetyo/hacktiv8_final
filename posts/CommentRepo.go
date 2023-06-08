@@ -8,5 +8,4 @@ type RepositoryComment interface {
 	Delete(CommentId int)
 	FindById(CommentId int) (repository.Comment, error)
 	FindAll() []repository.Comment
-	FindByUserName(username string) (repository.Comment, error)
 }

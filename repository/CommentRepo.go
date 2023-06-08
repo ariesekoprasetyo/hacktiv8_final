@@ -7,7 +7,6 @@ import (
 
 type Repository struct {
 	Db          *gorm.DB
-	PhotoRepo   posts.RepositoryPhoto
 	CommentRepo posts.RepositoryComment
 }
 
@@ -37,6 +36,6 @@ func (r *Repository) Delete(id int) {
 	panic(result.Error)
 }
 
-func (r *Repository) Update(data interface{}) {
+func (r *Repository) Update(comment Comment) {
 
 }
