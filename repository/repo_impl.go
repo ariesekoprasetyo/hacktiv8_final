@@ -31,6 +31,11 @@ func (r *Repository) FindById(id int, data interface{}) (interface{}, error) {
 
 }
 
-func (r *Repository) Delete(id int) {
+func (r *Repository) Delete(id int, data interface{}) {
+	result := r.Db.Where("id = ?", id).Delete(&data)
+	panic(result.Error)
+}
+
+func (r *Repository) Update(data interface{}) {
 
 }
