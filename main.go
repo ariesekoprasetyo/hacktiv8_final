@@ -5,9 +5,14 @@ import (
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"hacktiv8_final/controller"
+	"hacktiv8_final/posts"
 	"hacktiv8_final/repository"
+	"hacktiv8_final/router"
 	"log"
+	"net/http"
 	"os"
+	"time"
 )
 
 var DB *gorm.DB
@@ -23,6 +28,27 @@ func main() {
 		panic(err)
 	}
 	log.Println("Migrasi Berhasil")
+
+	//Init Repo
+	repoComment := repository.CommentRepo{Db: DB}
+
+	//Init Domain
+	commentService := posts.CommentController{CommentRepo: &repoComment}
+
+	//Init Controller
+	controllerComment := controller.PostController{PostsControl: &commentService}
+
+	routes := router.NewRouter(&repoComment, &controllerComment)
+
+	server := &http.Server{
+		Addr:           ":" + os.Getenv("PORT"),
+		Handler:        routes,
+		ReadTimeout:    10 * time.Second,
+		WriteTimeout:   10 * time.Second,
+		MaxHeaderBytes: 1 << 20,
+	}
+	serverErr := server.ListenAndServe()
+	panic(serverErr)
 }
 
 func setupDB() {

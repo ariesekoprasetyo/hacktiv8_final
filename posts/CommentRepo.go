@@ -3,9 +3,9 @@ package posts
 import "hacktiv8_final/repository"
 
 type RepositoryComment interface {
-	Save(Comment repository.Comment)
-	Update(Comment repository.Comment)
-	Delete(CommentId int)
-	FindById(CommentId int) (repository.Comment, error)
-	FindAll() []repository.Comment
+	SaveComment(Comment repository.Comment)
+	UpdateComment(Comment repository.Comment)
+	DeleteComment(CommentId int)
+	FindByIdComment(CommentId int) (repository.Comment, error)
+	FindAllComment() []repository.Comment
 }

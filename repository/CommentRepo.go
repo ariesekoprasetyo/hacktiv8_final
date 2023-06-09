@@ -2,26 +2,25 @@ package repository
 
 import (
 	"gorm.io/gorm"
-	"hacktiv8_final/posts"
 )
 
-type Repository struct {
-	Db          *gorm.DB
-	CommentRepo posts.RepositoryComment
+type CommentRepo struct {
+	Db *gorm.DB
 }
 
-func (r *Repository) Save(data Comment) {
-	result := r.Db.Create(&data)
+func (r *CommentRepo) SaveComment(data Comment) {
+	result := r.Db.Debug().Create(&data)
 	panic(result.Error)
 }
 
-func (r *Repository) FindAll(data Comment) Comment {
-	result := r.Db.Find(&data)
+func (r *CommentRepo) FindAllComment() []Comment {
+	var allComment []Comment
+	result := r.Db.Find(&Comment{})
 	panic(result.Error)
-	return data
+	return allComment
 }
 
-func (r *Repository) FindById(id int) (Comment, error) {
+func (r *CommentRepo) FindByIdComment(id int) (Comment, error) {
 	result := r.Db.Find(&Comment{}, id)
 	if result != nil {
 		return Comment{}, nil
@@ -31,11 +30,11 @@ func (r *Repository) FindById(id int) (Comment, error) {
 
 }
 
-func (r *Repository) Delete(id int) {
+func (r *CommentRepo) DeleteComment(id int) {
 	result := r.Db.Where("id = ?", id).Delete(&Comment{})
 	panic(result.Error)
 }
 
-func (r *Repository) Update(comment Comment) {
+func (r *CommentRepo) UpdateComment(comment Comment) {
 
 }

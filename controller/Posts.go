@@ -18,7 +18,7 @@ type PostController struct {
 
 func (controller *PostController) CreateComment(c *gin.Context) {
 	bodyReqComment := CreateCommentRequest{}
-	err := c.ShouldBind(bodyReqComment)
+	err := c.ShouldBind(&bodyReqComment)
 	if err != nil {
 		panic(err)
 	}
