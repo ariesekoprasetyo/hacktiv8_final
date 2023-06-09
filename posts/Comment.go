@@ -6,8 +6,7 @@ import (
 )
 
 type CommentController struct {
-	commentController controller.Posts
-	CommentRepo       RepositoryComment
+	CommentRepo RepositoryComment
 }
 
 func (c *CommentController) CreateComment(request controller.CreateCommentRequest) {
