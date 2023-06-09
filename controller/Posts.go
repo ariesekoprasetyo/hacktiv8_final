@@ -1,13 +1,11 @@
 package controller
 
-import (
-	"hacktiv8_final/repository"
-)
+type CreateCommentRequest struct {
+	UserId  uint   `json:"user_id" binding:"required"`
+	PhotoID uint   `json:"photo_id" binding:"required"`
+	Message string `json:"message" binding:"required"`
+}
 
-type Posts interface {
-	CreateComment(CreateCommentRequest)
-	UpdateComment(UpdateCommentRequest)
-	DeleteComment(commentId int)
-	FindByIdComment(commentId int) (repository.Comment, error)
-	FindAllComment() []repository.Comment
+type UpdateCommentRequest struct {
+	Message string `json:"message" binding:"required"`
 }
