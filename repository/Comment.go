@@ -20,7 +20,7 @@ func (r *CommentRepo) FindAllComment() []Comment {
 	return allComment
 }
 
-func (r *CommentRepo) FindByIdComment(id int) (Comment, error) {
+func (r *CommentRepo) FindByIdComment(id uint) (Comment, error) {
 	result := r.Db.Find(&Comment{}, id)
 	if result != nil {
 		return Comment{}, nil
@@ -30,7 +30,7 @@ func (r *CommentRepo) FindByIdComment(id int) (Comment, error) {
 
 }
 
-func (r *CommentRepo) DeleteComment(id int) {
+func (r *CommentRepo) DeleteComment(id uint) {
 	result := r.Db.Where("id = ?", id).Delete(&Comment{})
 	panic(result.Error)
 }

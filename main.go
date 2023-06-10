@@ -30,15 +30,15 @@ func main() {
 	log.Println("Migrasi Berhasil")
 
 	//Init Repo
-	repoComment := repository.CommentRepo{Db: DB}
+	commentRepo := repository.CommentRepo{Db: DB}
 
 	//Init Domain
-	commentService := posts.CommentController{CommentRepo: &repoComment}
+	commentService := posts.CommentService{CommentRepo: &commentRepo}
 
 	//Init Controller
-	controllerComment := controller.PostController{PostsControl: &commentService}
+	commentController := controller.PostsController{PostsControl: &commentService}
 
-	routes := router.NewRouter(&repoComment, &controllerComment)
+	routes := router.NewRouter(&commentRepo, &commentController)
 
 	server := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),

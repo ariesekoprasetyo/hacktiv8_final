@@ -7,7 +7,7 @@ import (
 	"net/http"
 )
 
-func NewRouter(commentRepo posts.RepositoryComment, commentController *controller.PostController) *gin.Engine {
+func NewRouter(commentRepo posts.RepositoryComment, commentController *controller.PostsController) *gin.Engine {
 	router := gin.Default()
 	router.GET("", func(context *gin.Context) {
 		context.JSON(http.StatusOK, "welcome home")
@@ -17,5 +17,9 @@ func NewRouter(commentRepo posts.RepositoryComment, commentController *controlle
 	})
 	groupRouter := router.Group("/posts")
 	groupRouter.POST("/comment", commentController.CreateComment)
+	groupRouter.GET("/comments", commentController.FindAllComment)
+	groupRouter.GET("/comment/:id", commentController.FindByIdComment)
+	groupRouter.DELETE("/comment/:id", commentController.DeleteComment)
+	groupRouter.PUT("/comment", commentController.UpdateComment)
 	return router
 }

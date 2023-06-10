@@ -4,10 +4,10 @@ import (
 	"hacktiv8_final/repository"
 )
 
-type Posts interface {
+type PostsService interface {
 	CreateComment(CreateCommentRequest)
 	UpdateComment(UpdateCommentRequest)
-	DeleteComment(commentId int)
-	FindByIdComment(commentId int) (repository.Comment, error)
+	DeleteComment(commentId uint)
+	FindByIdComment(commentId uint) (repository.Comment, error)
 	FindAllComment() []repository.Comment
 }

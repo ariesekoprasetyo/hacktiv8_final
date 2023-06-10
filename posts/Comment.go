@@ -5,33 +5,31 @@ import (
 	"hacktiv8_final/repository"
 )
 
-type CommentController struct {
+type CommentService struct {
 	CommentRepo RepositoryComment
 }
 
-// UpdateComment
-func (c *CommentController) UpdateComment(request controller.UpdateCommentRequest) {
+func (c *CommentService) UpdateComment(request controller.UpdateCommentRequest) {
 	//TODO implement me
 	panic("implement me")
 }
 
-// DeleteComment
-func (c *CommentController) DeleteComment(commentId int) {
+func (c *CommentService) DeleteComment(commentId uint) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CommentController) FindByIdComment(commentId int) (repository.Comment, error) {
+func (c *CommentService) FindByIdComment(commentId uint) (repository.Comment, error) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CommentController) FindAllComment() []repository.Comment {
+func (c *CommentService) FindAllComment() []repository.Comment {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (c *CommentController) CreateComment(request controller.CreateCommentRequest) {
+func (c *CommentService) CreateComment(request controller.CreateCommentRequest) {
 	comment := repository.Comment{
 		UserId:  request.UserId,
 		PhotoID: request.UserId,
