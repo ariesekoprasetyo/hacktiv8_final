@@ -15,45 +15,45 @@ type UpdateCommentRequest struct {
 	Message string `json:"message" binding:"required"`
 }
 
-type PostsController struct {
-	PostsControl PostsService
+type CommentController struct {
+	Service CommentService
 }
 
-func (controller *PostsController) CreateComment(c *gin.Context) {
+func (cc *CommentController) CreateComment(c *gin.Context) {
 	bodyReqComment := CreateCommentRequest{}
 	err := c.ShouldBind(&bodyReqComment)
 	if err != nil {
 		panic(err)
 	}
-	controller.PostsControl.CreateComment(bodyReqComment)
+	cc.Service.CreateComment(bodyReqComment)
 }
 
-func (controller *PostsController) UpdateComment(c *gin.Context) {
+func (cc *CommentController) UpdateComment(c *gin.Context) {
 	bodyReqUpdateComment := UpdateCommentRequest{}
 	err := c.ShouldBind(&bodyReqUpdateComment)
 	if err != nil {
 		panic(err)
 	}
-	controller.PostsControl.UpdateComment(bodyReqUpdateComment)
+	cc.Service.UpdateComment(bodyReqUpdateComment)
 }
 
-func (controller *PostsController) DeleteComment(c *gin.Context) {
+func (cc *CommentController) DeleteComment(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		panic(err)
 	}
-	controller.PostsControl.DeleteComment(uint(id))
+	cc.Service.DeleteComment(uint(id))
 
 }
 
-func (controller *PostsController) FindByIdComment(c *gin.Context) {
+func (cc *CommentController) FindByIdComment(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		panic(err)
 	}
-	controller.PostsControl.FindByIdComment(uint(id))
+	cc.Service.FindByIdComment(uint(id))
 }
 
-func (controller *PostsController) FindAllComment(c *gin.Context) {
-	controller.PostsControl.FindAllComment()
+func (cc *CommentController) FindAllComment(c *gin.Context) {
+	cc.Service.FindAllComment()
 }

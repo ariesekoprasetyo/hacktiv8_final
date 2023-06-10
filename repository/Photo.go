@@ -16,12 +16,12 @@ func (p PhotoRepo) UpdatePhoto(Photo Photo) {
 	panic("implement me")
 }
 
-func (p PhotoRepo) DeletePhoto(PhotoId int) {
+func (p PhotoRepo) DeletePhoto(PhotoId uint) {
 	//TODO implement me
 	panic("implement me")
 }
 
-func (p PhotoRepo) FindByIdPhoto(PhotoId int) (Photo, error) {
+func (p PhotoRepo) FindByIdPhoto(PhotoId uint) (Photo, error) {
 	//TODO implement me
 	panic("implement me")
 }

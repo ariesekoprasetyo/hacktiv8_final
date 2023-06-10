@@ -31,14 +31,17 @@ func main() {
 
 	//Init Repo
 	commentRepo := repository.CommentRepo{Db: DB}
+	photoRepo := repository.PhotoRepo{Db: DB}
 
 	//Init Domain
 	commentService := posts.CommentService{CommentRepo: &commentRepo}
+	photoService := posts.PhotoService{PhotoRepo: &photoRepo}
 
 	//Init Controller
-	commentController := controller.PostsController{PostsControl: &commentService}
+	commentController := controller.CommentController{Service: &commentService}
+	photoController := controller.PhotoController{Service: &photoService}
 
-	routes := router.NewRouter(&commentRepo, &commentController)
+	routes := router.NewRouter(&commentController, &photoController)
 
 	server := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),
@@ -63,7 +66,7 @@ func setupDB() {
 
 	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
-		log.Fatal("Failed To Connect")
+		log.Fatal("[INIT] failet connected to PostgreSQL")
 		return
 	}
 	log.Println("[INIT] connected to PostgreSQL")
