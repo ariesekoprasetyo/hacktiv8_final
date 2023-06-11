@@ -8,7 +8,7 @@ type (
 		Username    string `gorm:"uniqueIndex"`
 		Email       string `gorm:"uniqueIndex"`
 		Password    string
-		Age         uint
+		Age         int
 		CreatedAt   time.Time
 		UpdatedAt   time.Time
 		Photo       []Photo     `gorm:"foreignKey:ID"`
@@ -21,6 +21,7 @@ type (
 		Caption   string
 		PhotoUrl  string
 		UserId    uint `gorm:"foreignKey:ID"`
+		User      User
 		CreatedAt time.Time
 		UpdatedAt time.Time
 		Comment   []Comment `gorm:"foreignKey:ID"`
@@ -36,7 +37,9 @@ type (
 	Comment struct {
 		ID        uint `gorm:"prima"`
 		UserId    uint `gorm:"foreignKey:ID"`
+		User      User
 		PhotoID   uint `gorm:"foreignKey:ID"`
+		Photo     Photo
 		Message   string
 		CreatedAt time.Time
 		UpdatedAt time.Time

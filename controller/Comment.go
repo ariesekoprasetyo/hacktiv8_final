@@ -12,6 +12,7 @@ type CreateCommentRequest struct {
 }
 
 type UpdateCommentRequest struct {
+	ID      uint   `json:"id" binding:"required"`
 	Message string `json:"message" binding:"required"`
 }
 
@@ -47,11 +48,15 @@ func (cc *CommentController) DeleteComment(c *gin.Context) {
 }
 
 func (cc *CommentController) FindByIdComment(c *gin.Context) {
-	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
-	if err != nil {
-		panic(err)
-	}
-	cc.Service.FindByIdComment(uint(id))
+	//id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
+	//if err != nil {
+	//	panic(err)
+	//}
+	//comment, err := cc.Service.FindByIdComment(uint(id))
+	//if err != nil {
+	//	return
+	//}
+	//gin.H{"coco":comment.UserId}
 }
 
 func (cc *CommentController) FindAllComment(c *gin.Context) {

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/go-playground/validator/v10"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -23,6 +24,7 @@ func main() {
 		log.Fatal(err)
 	}
 	setupDB()
+	validate := validator.New()
 	err = DB.AutoMigrate(&repository.User{}, &repository.Photo{}, &repository.SocialMedia{}, &repository.Comment{})
 	if err != nil {
 		panic(err)
@@ -34,7 +36,10 @@ func main() {
 	photoRepo := repository.PhotoRepo{Db: DB}
 
 	//Init Domain
-	commentService := posts.CommentService{CommentRepo: &commentRepo}
+	commentService := posts.CommentService{
+		CommentRepo: &commentRepo,
+		Validate:    validate,
+	}
 	photoService := posts.PhotoService{PhotoRepo: &photoRepo}
 
 	//Init Controller

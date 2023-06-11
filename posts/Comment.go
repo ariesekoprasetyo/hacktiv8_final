@@ -1,39 +1,54 @@
 package posts
 
 import (
+	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/controller"
 	"hacktiv8_final/repository"
 )
 
 type CommentService struct {
 	CommentRepo RepositoryComment
+	Validate    *validator.Validate
 }
 
-func (c *CommentService) UpdateComment(request controller.UpdateCommentRequest) {
-	//TODO implement me
-	panic("implement me")
+func (cs *CommentService) UpdateComment(request controller.UpdateCommentRequest) {
+	err := cs.Validate.Struct(request)
+	if err != nil {
+		panic(err)
+	}
+	commentData, err := cs.CommentRepo.FindByIdComment(request.ID)
+	if err != nil {
+		panic(err)
+	}
+	commentData.Message = request.Message
+	cs.CommentRepo.UpdateComment(commentData)
 }
 
-func (c *CommentService) DeleteComment(commentId uint) {
-	//TODO implement me
-	panic("implement me")
+func (cs *CommentService) DeleteComment(commentId uint) {
+	cs.CommentRepo.DeleteComment(commentId)
 }
 
-func (c *CommentService) FindByIdComment(commentId uint) (repository.Comment, error) {
-	//TODO implement me
-	panic("implement me")
+func (cs *CommentService) FindByIdComment(commentId uint) (repository.Comment, error) {
+	commentByIdResult, err := cs.CommentRepo.FindByIdComment(commentId)
+	if err != nil {
+		return commentByIdResult, err
+	}
+	return commentByIdResult, nil
 }
 
-func (c *CommentService) FindAllComment() []repository.Comment {
-	//TODO implement me
-	panic("implement me")
+func (cs *CommentService) FindAllComment() []repository.Comment {
+	allComment := cs.CommentRepo.FindAllComment()
+	return allComment
 }
 
-func (c *CommentService) CreateComment(request controller.CreateCommentRequest) {
+func (cs *CommentService) CreateComment(request controller.CreateCommentRequest) {
+	if err := cs.Validate.Struct(request); err != nil {
+		panic(err)
+	}
 	comment := repository.Comment{
 		UserId:  request.UserId,
 		PhotoID: request.UserId,
 		Message: request.Message,
 	}
-	c.CommentRepo.SaveComment(comment)
+	cs.CommentRepo.SaveComment(comment)
 }

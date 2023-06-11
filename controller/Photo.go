@@ -9,10 +9,10 @@ type CreatePhotoRequest struct {
 	UserID   uint   `json:"user_id"`
 }
 type UpdatePhotoRequest struct {
+	ID       uint   `json:"id"`
 	Title    string `json:"title"`
 	Caption  string `json:"caption"`
 	PhotoURL string `json:"photo_url"`
-	UserID   uint   `json:"user_id"`
 }
 
 type PhotoController struct {
@@ -26,4 +26,10 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 		panic(err)
 	}
 	pc.Service.CreatePhoto(bodyReqPhoto)
+}
+
+func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
+	//bodyReqUpdatePhoto := UpdatePhotoRequest{}
+	//idPhoto,err :=
+
 }

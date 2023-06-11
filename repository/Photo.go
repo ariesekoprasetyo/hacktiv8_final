@@ -1,32 +1,43 @@
 package repository
 
-import "gorm.io/gorm"
+import (
+	"gorm.io/gorm"
+)
 
 type PhotoRepo struct {
 	Db *gorm.DB
 }
 
-func (p PhotoRepo) SavePhoto(Photo Photo) {
-	//TODO implement me
-	panic("implement me")
+func (p PhotoRepo) SavePhoto(photo Photo) {
+	result := p.Db.Create(&photo)
+	panic(result.Error)
 }
 
-func (p PhotoRepo) UpdatePhoto(Photo Photo) {
-	//TODO implement me
-	panic("implement me")
+func (p PhotoRepo) UpdatePhoto(photo Photo) {
+	result := p.Db.Model(&photo).Updates(photo)
+	panic(result.Error)
 }
 
 func (p PhotoRepo) DeletePhoto(PhotoId uint) {
-	//TODO implement me
-	panic("implement me")
+	var photo Photo
+	result := p.Db.Where("id = ?", PhotoId).Delete(photo)
+	if result.Error != nil {
+		panic(result.Error)
+	}
 }
 
 func (p PhotoRepo) FindByIdPhoto(PhotoId uint) (Photo, error) {
-	//TODO implement me
-	panic("implement me")
+	var photoById Photo
+	result := p.Db.Find(&photoById, PhotoId)
+	if result != nil {
+		return photoById, nil
+	}
+	return photoById, result.Error
 }
 
 func (p PhotoRepo) FindAllPhoto() []Photo {
-	//TODO implement me
-	panic("implement me")
+	var allPhoto []Photo
+	result := p.Db.Preload("Comments").Preload("Users").Find(&allPhoto)
+	panic(result.Error)
+	return allPhoto
 }

@@ -1,6 +1,8 @@
 package posts
 
-import "hacktiv8_final/repository"
+import (
+	"hacktiv8_final/repository"
+)
 
 type RepositoryComment interface {
 	SaveComment(Comment repository.Comment)
