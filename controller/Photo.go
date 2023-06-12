@@ -1,6 +1,9 @@
 package controller
 
-import "github.com/gin-gonic/gin"
+import (
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 type CreatePhotoRequest struct {
 	Title    string `json:"title"`
@@ -23,13 +26,34 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 	bodyReqPhoto := CreatePhotoRequest{}
 	err := c.ShouldBind(&bodyReqPhoto)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
 	}
-	pc.Service.CreatePhoto(bodyReqPhoto)
+	finalBodyReqPhoto := CreatePhotoRequest{
+		Title:    bodyReqPhoto.Title,
+		Caption:  bodyReqPhoto.Caption,
+		PhotoURL: bodyReqPhoto.PhotoURL,
+		UserID:   uint(c.Keys["userId"].(int)),
+	}
+	err = pc.Service.CreatePhoto(finalBodyReqPhoto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Success Add",
+	})
 }
 
 func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
-	//bodyReqUpdatePhoto := UpdatePhotoRequest{}
-	//idPhoto,err :=
+	bodyReqUpdatePhoto := UpdatePhotoRequest{}
+	err := c.ShouldBind(&bodyReqUpdatePhoto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
 
 }

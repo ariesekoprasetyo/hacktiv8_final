@@ -11,9 +11,9 @@ type PhotoService struct {
 	Validate  *validator.Validate
 }
 
-func (p *PhotoService) CreatePhoto(request controller.CreatePhotoRequest) {
+func (p *PhotoService) CreatePhoto(request controller.CreatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
-		panic(err)
+		return err
 	}
 	photo := repository.Photo{
 		Title:    request.Title,
@@ -22,25 +22,32 @@ func (p *PhotoService) CreatePhoto(request controller.CreatePhotoRequest) {
 		UserId:   request.UserID,
 	}
 	p.PhotoRepo.SavePhoto(photo)
+	return nil
 }
 
-func (p *PhotoService) UpdatePhoto(request controller.UpdatePhotoRequest) {
+func (p *PhotoService) UpdatePhoto(request controller.UpdatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
-		panic(err)
+		return err
 	}
 	photoData, err := p.PhotoRepo.FindByIdPhoto(request.ID)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	photoData.Title = request.Title
 	photoData.Caption = request.Caption
 	photoData.PhotoUrl = request.PhotoURL
 	p.PhotoRepo.UpdatePhoto(photoData)
+	return nil
 
 }
 
-func (p *PhotoService) DeletePhoto(photoId uint) {
+func (p *PhotoService) DeletePhoto(photoId uint) error {
+	_, err := p.PhotoRepo.FindByIdPhoto(photoId)
+	if err != nil {
+		return err
+	}
 	p.PhotoRepo.DeletePhoto(photoId)
+	return nil
 }
 
 func (p *PhotoService) FindByIdPhoto(photoId uint) (repository.Photo, error) {

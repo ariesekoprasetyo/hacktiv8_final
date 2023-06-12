@@ -11,21 +11,27 @@ type CommentService struct {
 	Validate    *validator.Validate
 }
 
-func (cs *CommentService) UpdateComment(request controller.UpdateCommentRequest) {
+func (cs *CommentService) UpdateComment(request controller.UpdateCommentRequest) error {
 	err := cs.Validate.Struct(request)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	commentData, err := cs.CommentRepo.FindByIdComment(request.ID)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	commentData.Message = request.Message
 	cs.CommentRepo.UpdateComment(commentData)
+	return nil
 }
 
-func (cs *CommentService) DeleteComment(commentId uint) {
+func (cs *CommentService) DeleteComment(commentId uint) error {
+	_, err := cs.CommentRepo.FindByIdComment(commentId)
+	if err != nil {
+		return err
+	}
 	cs.CommentRepo.DeleteComment(commentId)
+	return nil
 }
 
 func (cs *CommentService) FindByIdComment(commentId uint) (repository.Comment, error) {
@@ -41,9 +47,9 @@ func (cs *CommentService) FindAllComment() []repository.Comment {
 	return allComment
 }
 
-func (cs *CommentService) CreateComment(request controller.CreateCommentRequest) {
+func (cs *CommentService) CreateComment(request controller.CreateCommentRequest) error {
 	if err := cs.Validate.Struct(request); err != nil {
-		panic(err)
+		return err
 	}
 	comment := repository.Comment{
 		UserId:  request.UserId,
@@ -51,4 +57,5 @@ func (cs *CommentService) CreateComment(request controller.CreateCommentRequest)
 		Message: request.Message,
 	}
 	cs.CommentRepo.SaveComment(comment)
+	return nil
 }

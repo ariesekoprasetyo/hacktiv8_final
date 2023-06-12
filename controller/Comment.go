@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"net/http"
 	"strconv"
 )
 
@@ -24,41 +25,85 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 	bodyReqComment := CreateCommentRequest{}
 	err := c.ShouldBind(&bodyReqComment)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
 	}
-	cc.Service.CreateComment(bodyReqComment)
+	finalBodyReqComment := CreateCommentRequest{
+		UserId:  uint(c.Keys["userId"].(int)),
+		PhotoID: bodyReqComment.PhotoID,
+		Message: bodyReqComment.Message,
+	}
+	err = cc.Service.CreateComment(finalBodyReqComment)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Update Add",
+	})
 }
 
 func (cc *CommentController) UpdateComment(c *gin.Context) {
 	bodyReqUpdateComment := UpdateCommentRequest{}
 	err := c.ShouldBind(&bodyReqUpdateComment)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
 	}
-	cc.Service.UpdateComment(bodyReqUpdateComment)
+	err = cc.Service.UpdateComment(bodyReqUpdateComment)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Update Success",
+	})
+
 }
 
 func (cc *CommentController) DeleteComment(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
-		panic(err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
 	}
-	cc.Service.DeleteComment(uint(id))
-
+	err = cc.Service.DeleteComment(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Delete Success",
+	})
 }
 
 func (cc *CommentController) FindByIdComment(c *gin.Context) {
-	//id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
-	//if err != nil {
-	//	panic(err)
-	//}
-	//comment, err := cc.Service.FindByIdComment(uint(id))
-	//if err != nil {
-	//	return
-	//}
-	//gin.H{"coco":comment.UserId}
+	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	comment, err := cc.Service.FindByIdComment(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": comment,
+	})
 }
 
 func (cc *CommentController) FindAllComment(c *gin.Context) {
-	cc.Service.FindAllComment()
+	result := cc.Service.FindAllComment()
+	c.JSON(http.StatusOK, gin.H{
+		"data": result,
+	})
 }
