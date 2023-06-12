@@ -9,12 +9,12 @@ import (
 type CreateCommentRequest struct {
 	UserId  uint   `json:"user_id" binding:"required"`
 	PhotoID uint   `json:"photo_id" binding:"required"`
-	Message string `json:"message" binding:"required"`
+	Message string `validate:"required" json:"message" binding:"required"`
 }
 
 type UpdateCommentRequest struct {
 	ID      uint   `json:"id" binding:"required"`
-	Message string `json:"message" binding:"required"`
+	Message string `validate:"required" json:"message" binding:"required"`
 }
 
 type CommentController struct {

@@ -3,19 +3,20 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"strconv"
 )
 
 type CreatePhotoRequest struct {
-	Title    string `json:"title"`
+	Title    string `validate:"required" json:"title"`
 	Caption  string `json:"caption"`
-	PhotoURL string `json:"photo_url"`
+	PhotoURL string `validate:"required" json:"photo_url"`
 	UserID   uint   `json:"user_id"`
 }
 type UpdatePhotoRequest struct {
 	ID       uint   `json:"id"`
-	Title    string `json:"title"`
+	Title    string `validate:"required" json:"title"`
 	Caption  string `json:"caption"`
-	PhotoURL string `json:"photo_url"`
+	PhotoURL string `validate:"required" json:"photo_url"`
 }
 
 type PhotoController struct {
@@ -55,5 +56,47 @@ func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
 			"message": err,
 		})
 	}
+}
 
+func (pc *PhotoController) DeletePhoto(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	err = pc.Service.DeletePhoto(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"message": "Delete Success",
+	})
+}
+
+func (pc *PhotoController) FindByIdPhoto(c *gin.Context) {
+	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	photo, err := pc.Service.FindByIdPhoto(uint(id))
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err,
+		})
+	}
+	c.JSON(http.StatusOK, gin.H{
+		"data": photo,
+	})
+}
+
+func (pc *PhotoController) FindAllPhoto(c *gin.Context) {
+	result := pc.Service.FindAllPhoto()
+	c.JSON(http.StatusOK, gin.H{
+		"data": result,
+	})
 }

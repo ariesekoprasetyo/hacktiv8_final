@@ -23,13 +23,10 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	//Setup DB And Migration
 	setupDB()
 	validate := validator.New()
-	err = DB.AutoMigrate(&repository.User{}, &repository.Photo{}, &repository.SocialMedia{}, &repository.Comment{})
-	if err != nil {
-		panic(err)
-	}
-	log.Println("Migrasi Berhasil")
 
 	//Init Repo
 	commentRepo := repository.CommentRepo{Db: DB}
@@ -40,7 +37,10 @@ func main() {
 		CommentRepo: &commentRepo,
 		Validate:    validate,
 	}
-	photoService := posts.PhotoService{PhotoRepo: &photoRepo}
+	photoService := posts.PhotoService{
+		PhotoRepo: photoRepo,
+		Validate:  validate,
+	}
 
 	//Init Controller
 	commentController := controller.CommentController{Service: &commentService}
@@ -74,5 +74,10 @@ func setupDB() {
 		log.Fatal("[INIT] failet connected to PostgreSQL")
 		return
 	}
+	err = DB.AutoMigrate(&repository.User{}, &repository.Photo{}, &repository.SocialMedia{}, &repository.Comment{})
+	if err != nil {
+		panic(err)
+	}
+	log.Println("Migrasi Berhasil")
 	log.Println("[INIT] connected to PostgreSQL")
 }

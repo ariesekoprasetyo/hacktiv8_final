@@ -43,7 +43,13 @@ func NewRouter(commentController *controller.CommentController, photoController 
 		photo := groupRouter.Group("/posts/photo")
 		{
 			photo.POST("/", photoController.CreatePhoto)
+			photo.GET("/", photoController.FindAllPhoto)
+			photo.GET("/:id", photoController.FindByIdPhoto)
+			photo.DELETE("/:id", photoController.DeletePhoto)
+			photo.PUT("/", commentController.UpdateComment)
 		}
+		//user := groupRouter.Group("/users/socialmedia")
+
 	}
 	return router
 }

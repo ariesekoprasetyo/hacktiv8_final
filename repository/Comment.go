@@ -22,7 +22,7 @@ func (r *CommentRepo) FindAllComment() []Comment {
 
 func (r *CommentRepo) FindByIdComment(id uint) (Comment, error) {
 	var commentById Comment
-	result := r.Db.Find(&commentById, id)
+	result := r.Db.First(&commentById, id)
 	if result != nil {
 		return commentById, nil
 	}
