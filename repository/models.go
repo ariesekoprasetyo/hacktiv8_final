@@ -24,13 +24,13 @@ type (
 		User      User
 		CreatedAt time.Time
 		UpdatedAt time.Time
-		Comment   []Comment `gorm:"foreignKey:ID"`
+		Comment   []Comment `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE"`
 	}
 	SocialMedia struct {
 		ID             uint `gorm:"primaryKey"`
 		Name           string
 		SocialMediaUrl string
-		UserId         uint `gorm:"foreignKey:ID"`
+		UserId         uint `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE"`
 		CreatedAt      time.Time
 		UpdatedAt      time.Time
 	}
