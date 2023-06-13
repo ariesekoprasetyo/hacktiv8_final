@@ -10,8 +10,10 @@ type UsersRepo struct {
 }
 
 func (u *UsersRepo) SaveUser(Users User) {
-	result := u.Db.Create(&Users)
-	panic(result.Error)
+	err := u.Db.Create(&Users).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (u *UsersRepo) UpdateUser(Users User) {
@@ -44,7 +46,7 @@ func (u *UsersRepo) FindAllUser() []User {
 func (u *UsersRepo) FindByUsername(Username string) (User, error) {
 	var Users User
 	result := u.Db.First(&Users, "username = ?", Username)
-	if result != nil {
+	if result.Error != nil {
 		return Users, errors.New("invalid username or password")
 	}
 	return Users, nil

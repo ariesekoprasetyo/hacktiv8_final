@@ -1,4 +1,4 @@
-package controller
+package user
 
 import (
 	"fmt"
@@ -6,8 +6,7 @@ import (
 	"time"
 )
 
-func GenerateToken(userId uint) (string, error) {
-	var jwtSecret GenerateTokenStruct
+func GenerateToken(userId uint, jwtSecret string) (string, error) {
 	token := jwt.New(jwt.SigningMethodHS256)
 	now := time.Now().UTC()
 	claims := token.Claims.(jwt.MapClaims)
@@ -17,7 +16,7 @@ func GenerateToken(userId uint) (string, error) {
 	claims["iat"] = now.Unix()
 	claims["nbf"] = now.Unix()
 
-	tokenString, err := token.SignedString([]byte(jwtSecret.JWTSecret))
+	tokenString, err := token.SignedString([]byte(jwtSecret))
 	if err != nil {
 		return "", fmt.Errorf("generetaing JWT Token Failed: %w", err)
 	}

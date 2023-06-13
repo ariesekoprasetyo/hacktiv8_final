@@ -28,6 +28,7 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
 		})
+		return
 	}
 	finalBodyReqComment := CreateCommentRequest{
 		UserId:  uint(c.Keys["userId"].(int)),

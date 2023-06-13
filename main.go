@@ -45,14 +45,15 @@ func main() {
 	}
 
 	userService := user.Authz{
-		AuthRepo: &userRepo,
-		Validate: validate,
+		AuthRepo:  &userRepo,
+		Validate:  validate,
+		JwtSecret: os.Getenv("JWT_SECRET"),
 	}
 
 	//Init Controller
 	commentController := controller.CommentController{Service: &commentService}
 	photoController := controller.PhotoController{Service: &photoService}
-	authController := controller.AuthController{Service: &userService, JwtSecretKey: os.Getenv("JWT_SECRET")}
+	authController := controller.AuthController{Service: &userService}
 
 	routes := router.NewRouter(&commentController, &photoController, &authController)
 

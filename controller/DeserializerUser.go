@@ -10,7 +10,6 @@ import (
 
 func DeserializeUser(controller *AuthController) gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var JWTSecretKey GenerateTokenStruct
 		var token string
 		authorizationHeader := ctx.Request.Header.Get("Authorization")
 		fields := strings.Fields(authorizationHeader)
@@ -24,7 +23,7 @@ func DeserializeUser(controller *AuthController) gin.HandlerFunc {
 			return
 		}
 
-		sub, err := ValidateToken(token, JWTSecretKey.JWTSecret)
+		sub, err := controller.Service.ValidateToken(token)
 		if err != nil {
 			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": err.Error()})
 			return
