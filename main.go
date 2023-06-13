@@ -25,8 +25,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	_ = &controller.GenerateTokenStruct{JWTSecret: os.Getenv("JWT_SECRET")}
-
 	//Setup DB And Migration
 	setupDB()
 	validate := validator.New()
@@ -54,7 +52,7 @@ func main() {
 	//Init Controller
 	commentController := controller.CommentController{Service: &commentService}
 	photoController := controller.PhotoController{Service: &photoService}
-	authController := controller.AuthController{Service: &userService}
+	authController := controller.AuthController{Service: &userService, JwtSecretKey: os.Getenv("JWT_SECRET")}
 
 	routes := router.NewRouter(&commentController, &photoController, &authController)
 

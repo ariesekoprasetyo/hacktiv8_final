@@ -25,7 +25,8 @@ type Response struct {
 }
 
 type AuthController struct {
-	Service AuthService
+	Service      AuthService
+	JwtSecretKey string
 }
 
 func (ac *AuthController) Login(c *gin.Context) {

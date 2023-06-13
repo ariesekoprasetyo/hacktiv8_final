@@ -6,7 +6,7 @@ import (
 	"time"
 )
 
-func GenerateToken(userId interface{}) (string, error) {
+func GenerateToken(userId uint) (string, error) {
 	var jwtSecret GenerateTokenStruct
 	token := jwt.New(jwt.SigningMethodHS256)
 	now := time.Now().UTC()
