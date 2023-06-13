@@ -39,6 +39,5 @@ func ValidateToken(token string, signedJWTKey string) (interface{}, error) {
 	if !ok || !tok.Valid {
 		return nil, fmt.Errorf("invalid token claim")
 	}
-
 	return claims["sub"], nil
 }

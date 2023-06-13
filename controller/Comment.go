@@ -2,27 +2,17 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"hacktiv8_final/posts"
 	"net/http"
 	"strconv"
 )
-
-type CreateCommentRequest struct {
-	UserId  uint   `json:"user_id" binding:"required"`
-	PhotoID uint   `json:"photo_id" binding:"required"`
-	Message string `validate:"required" json:"message" binding:"required"`
-}
-
-type UpdateCommentRequest struct {
-	ID      uint   `json:"id" binding:"required"`
-	Message string `validate:"required" json:"message" binding:"required"`
-}
 
 type CommentController struct {
 	Service CommentService
 }
 
 func (cc *CommentController) CreateComment(c *gin.Context) {
-	bodyReqComment := CreateCommentRequest{}
+	bodyReqComment := posts.CreateCommentRequest{}
 	err := c.ShouldBind(&bodyReqComment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -30,7 +20,7 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 		})
 		return
 	}
-	finalBodyReqComment := CreateCommentRequest{
+	finalBodyReqComment := posts.CreateCommentRequest{
 		UserId:  uint(c.Keys["userId"].(int)),
 		PhotoID: bodyReqComment.PhotoID,
 		Message: bodyReqComment.Message,
@@ -47,7 +37,7 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 }
 
 func (cc *CommentController) UpdateComment(c *gin.Context) {
-	bodyReqUpdateComment := UpdateCommentRequest{}
+	bodyReqUpdateComment := posts.UpdateCommentRequest{}
 	err := c.ShouldBind(&bodyReqUpdateComment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

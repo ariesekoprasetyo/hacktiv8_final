@@ -11,7 +11,6 @@ type (
 		Age         int
 		CreatedAt   time.Time
 		UpdatedAt   time.Time
-		Photo       []Photo     `gorm:"foreignKey:ID"`
 		SocialMedia SocialMedia `gorm:"foreignKey:ID"`
 		Comment     []Comment   `gorm:"foreignKey:ID"`
 	}
@@ -21,7 +20,7 @@ type (
 		Caption   string
 		PhotoUrl  string
 		UserId    uint `gorm:"foreignKey:ID"`
-		User      User
+		User      []User
 		CreatedAt time.Time
 		UpdatedAt time.Time
 		Comment   []Comment `gorm:"foreignKey:ID;constraint:OnDelete:CASCADE"`

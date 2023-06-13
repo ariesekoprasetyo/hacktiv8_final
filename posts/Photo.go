@@ -2,16 +2,27 @@ package posts
 
 import (
 	"github.com/go-playground/validator/v10"
-	"hacktiv8_final/controller"
 	"hacktiv8_final/repository"
 )
 
+type CreatePhotoRequest struct {
+	Title    string `validate:"required" json:"title"`
+	Caption  string `json:"caption"`
+	PhotoURL string `validate:"required" json:"photo_url"`
+	UserID   uint   `json:"user_id"`
+}
+type UpdatePhotoRequest struct {
+	ID       uint   `json:"id"`
+	Title    string `validate:"required" json:"title"`
+	Caption  string `json:"caption"`
+	PhotoURL string `validate:"required" json:"photo_url"`
+}
 type PhotoService struct {
 	PhotoRepo RepositoryPhoto
 	Validate  *validator.Validate
 }
 
-func (p *PhotoService) CreatePhoto(request controller.CreatePhotoRequest) error {
+func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
 		return err
 	}
@@ -25,7 +36,7 @@ func (p *PhotoService) CreatePhoto(request controller.CreatePhotoRequest) error 
 	return nil
 }
 
-func (p *PhotoService) UpdatePhoto(request controller.UpdatePhotoRequest) error {
+func (p *PhotoService) UpdatePhoto(request UpdatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
 		return err
 	}
@@ -67,8 +78,6 @@ func (p *PhotoService) FindAllPhoto() []repository.Photo {
 			Caption:  value.Caption,
 			PhotoUrl: value.PhotoUrl,
 			UserId:   value.UserId,
-			User:     value.User,
-			Comment:  value.Comment,
 		}
 		photos = append(photos, photo)
 	}

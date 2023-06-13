@@ -2,16 +2,26 @@ package posts
 
 import (
 	"github.com/go-playground/validator/v10"
-	"hacktiv8_final/controller"
 	"hacktiv8_final/repository"
 )
+
+type CreateCommentRequest struct {
+	UserId  uint   `json:"user_id" binding:"required"`
+	PhotoID uint   `json:"photo_id" binding:"required"`
+	Message string `validate:"required" json:"message" binding:"required"`
+}
+
+type UpdateCommentRequest struct {
+	ID      uint   `json:"id" binding:"required"`
+	Message string `validate:"required" json:"message" binding:"required"`
+}
 
 type CommentService struct {
 	CommentRepo RepositoryComment
 	Validate    *validator.Validate
 }
 
-func (cs *CommentService) UpdateComment(request controller.UpdateCommentRequest) error {
+func (cs *CommentService) UpdateComment(request UpdateCommentRequest) error {
 	err := cs.Validate.Struct(request)
 	if err != nil {
 		return err
@@ -47,7 +57,7 @@ func (cs *CommentService) FindAllComment() []repository.Comment {
 	return allComment
 }
 
-func (cs *CommentService) CreateComment(request controller.CreateCommentRequest) error {
+func (cs *CommentService) CreateComment(request CreateCommentRequest) error {
 	if err := cs.Validate.Struct(request); err != nil {
 		return err
 	}

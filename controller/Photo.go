@@ -2,40 +2,29 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"hacktiv8_final/posts"
 	"net/http"
 	"strconv"
 )
-
-type CreatePhotoRequest struct {
-	Title    string `validate:"required" json:"title"`
-	Caption  string `json:"caption"`
-	PhotoURL string `validate:"required" json:"photo_url"`
-	UserID   uint   `json:"user_id"`
-}
-type UpdatePhotoRequest struct {
-	ID       uint   `json:"id"`
-	Title    string `validate:"required" json:"title"`
-	Caption  string `json:"caption"`
-	PhotoURL string `validate:"required" json:"photo_url"`
-}
 
 type PhotoController struct {
 	Service PhotoService
 }
 
 func (pc *PhotoController) CreatePhoto(c *gin.Context) {
-	bodyReqPhoto := CreatePhotoRequest{}
+	bodyReqPhoto := posts.CreatePhotoRequest{}
+
 	err := c.ShouldBind(&bodyReqPhoto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
 		})
 	}
-	finalBodyReqPhoto := CreatePhotoRequest{
+	finalBodyReqPhoto := posts.CreatePhotoRequest{
 		Title:    bodyReqPhoto.Title,
 		Caption:  bodyReqPhoto.Caption,
 		PhotoURL: bodyReqPhoto.PhotoURL,
-		UserID:   uint(c.Keys["userId"].(int)),
+		UserID:   uint(c.Keys["userId"].(uint)),
 	}
 	err = pc.Service.CreatePhoto(finalBodyReqPhoto)
 	if err != nil {
@@ -49,7 +38,7 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 }
 
 func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
-	bodyReqUpdatePhoto := UpdatePhotoRequest{}
+	bodyReqUpdatePhoto := posts.UpdatePhotoRequest{}
 	err := c.ShouldBind(&bodyReqUpdatePhoto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

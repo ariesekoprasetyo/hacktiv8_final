@@ -2,6 +2,7 @@ package repository
 
 import (
 	"gorm.io/gorm"
+	"log"
 )
 
 type PhotoRepo struct {
@@ -9,8 +10,11 @@ type PhotoRepo struct {
 }
 
 func (p PhotoRepo) SavePhoto(photo Photo) {
-	result := p.Db.Create(&photo)
-	panic(result.Error)
+	err := p.Db.Create(&photo).Error
+	if err != nil {
+		log.Println(err)
+		panic(err)
+	}
 }
 
 func (p PhotoRepo) UpdatePhoto(photo Photo) {

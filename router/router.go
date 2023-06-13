@@ -33,20 +33,22 @@ func NewRouter(commentController *controller.CommentController, photoController 
 	groupRouter.Use(CORSMiddleware)
 	{
 		comment := groupRouter.Group("/posts/comment")
+		comment.Use(controller.DeserializeUser(authController))
 		{
-			comment.POST("/", commentController.CreateComment)
-			comment.GET("/", commentController.FindAllComment)
+			comment.POST("", commentController.CreateComment)
+			comment.GET("", commentController.FindAllComment)
 			comment.GET("/:id", commentController.FindByIdComment)
 			comment.DELETE("/:id", commentController.DeleteComment)
-			comment.PUT("/", commentController.UpdateComment)
+			comment.PUT("", commentController.UpdateComment)
 		}
 		photo := groupRouter.Group("/posts/photo")
+		photo.Use(controller.DeserializeUser(authController))
 		{
-			photo.POST("/", photoController.CreatePhoto)
-			photo.GET("/", photoController.FindAllPhoto)
+			photo.POST("", photoController.CreatePhoto)
+			photo.GET("", photoController.FindAllPhoto)
 			photo.GET("/:id", photoController.FindByIdPhoto)
 			photo.DELETE("/:id", photoController.DeletePhoto)
-			photo.PUT("/", commentController.UpdateComment)
+			photo.PUT("", commentController.UpdateComment)
 		}
 		auth := groupRouter.Group("/users/authentication")
 		{
