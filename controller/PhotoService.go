@@ -7,7 +7,7 @@ import (
 
 type PhotoService interface {
 	CreatePhoto(request posts.CreatePhotoRequest) error
-	UpdatePhoto(request posts.UpdatePhotoRequest) error
+	UpdatePhoto(photoId uint, request posts.UpdatePhotoRequest) error
 	DeletePhoto(photoId uint) error
 	FindByIdPhoto(photoId uint) (repository.Photo, error)
 	FindAllPhoto() []repository.Photo

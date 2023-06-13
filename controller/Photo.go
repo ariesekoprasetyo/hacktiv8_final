@@ -17,8 +17,9 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 	err := c.ShouldBind(&bodyReqPhoto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	finalBodyReqPhoto := posts.CreatePhotoRequest{
 		Title:    bodyReqPhoto.Title,
@@ -29,8 +30,9 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 	err = pc.Service.CreatePhoto(finalBodyReqPhoto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Success Add",
@@ -42,9 +44,27 @@ func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
 	err := c.ShouldBind(&bodyReqUpdatePhoto)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
+	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	err = pc.Service.UpdatePhoto(uint(id), bodyReqUpdatePhoto)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+	c.JSON(200, gin.H{
+		"message": "Success Update Photo",
+	})
 }
 
 func (pc *PhotoController) DeletePhoto(c *gin.Context) {
@@ -57,8 +77,9 @@ func (pc *PhotoController) DeletePhoto(c *gin.Context) {
 	err = pc.Service.DeletePhoto(uint(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Delete Success",
@@ -69,14 +90,16 @@ func (pc *PhotoController) FindByIdPhoto(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	photo, err := pc.Service.FindByIdPhoto(uint(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": photo,

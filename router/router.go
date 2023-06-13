@@ -23,8 +23,8 @@ func CORSMiddleware(c *gin.Context) {
 
 func NewRouter(commentController *controller.CommentController, photoController *controller.PhotoController, authController *controller.AuthController) *gin.Engine {
 	router := gin.Default()
-	router.GET("", func(context *gin.Context) {
-		context.JSON(http.StatusOK, "welcome home")
+	router.GET("", func(c *gin.Context) {
+		c.JSON(http.StatusOK, "welcome home")
 	})
 	router.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"code": "PAGE_NOT_FOUND", "message": "Page not found"})
@@ -48,7 +48,7 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			photo.GET("", photoController.FindAllPhoto)
 			photo.GET("/:id", photoController.FindByIdPhoto)
 			photo.DELETE("/:id", photoController.DeletePhoto)
-			photo.PUT("", commentController.UpdateComment)
+			photo.PUT("/:id", photoController.UpdatePhoto)
 		}
 		auth := groupRouter.Group("/users/authentication")
 		{

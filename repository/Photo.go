@@ -17,9 +17,11 @@ func (p PhotoRepo) SavePhoto(photo Photo) {
 	}
 }
 
-func (p PhotoRepo) UpdatePhoto(photo Photo) {
-	result := p.Db.Model(&photo).Updates(photo)
-	panic(result.Error)
+func (p PhotoRepo) UpdatePhoto(photoId uint, photo Photo) {
+	err := p.Db.Model(&photo).Where("id = ?", photoId).Updates(photo).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (p PhotoRepo) DeletePhoto(PhotoId uint) {
@@ -32,16 +34,18 @@ func (p PhotoRepo) DeletePhoto(PhotoId uint) {
 
 func (p PhotoRepo) FindByIdPhoto(PhotoId uint) (Photo, error) {
 	var photoById Photo
-	result := p.Db.Find(&photoById, PhotoId)
-	if result != nil {
-		return photoById, nil
+	err := p.Db.Preload("User").First(&photoById, PhotoId).Error
+	if err != nil {
+		return photoById, err
 	}
-	return photoById, result.Error
+	return photoById, nil
 }
 
 func (p PhotoRepo) FindAllPhoto() []Photo {
 	var allPhoto []Photo
-	result := p.Db.Preload("Comments").Preload("Users").Find(&allPhoto)
-	panic(result.Error)
+	err := p.Db.Preload("User").Preload("Comment").Find(&allPhoto).Error
+	if err != nil {
+		panic(err)
+	}
 	return allPhoto
 }

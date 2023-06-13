@@ -62,8 +62,8 @@ func (cs *CommentService) CreateComment(request CreateCommentRequest) error {
 		return err
 	}
 	comment := repository.Comment{
-		UserId:  request.UserId,
-		PhotoID: request.UserId,
+		UserID:  request.UserId,
+		PhotoID: request.PhotoID,
 		Message: request.Message,
 	}
 	cs.CommentRepo.SaveComment(comment)

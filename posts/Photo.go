@@ -12,7 +12,6 @@ type CreatePhotoRequest struct {
 	UserID   uint   `json:"user_id"`
 }
 type UpdatePhotoRequest struct {
-	ID       uint   `json:"id"`
 	Title    string `validate:"required" json:"title"`
 	Caption  string `json:"caption"`
 	PhotoURL string `validate:"required" json:"photo_url"`
@@ -30,24 +29,24 @@ func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
 		Title:    request.Title,
 		Caption:  request.Caption,
 		PhotoUrl: request.PhotoURL,
-		UserId:   request.UserID,
+		UserID:   request.UserID,
 	}
 	p.PhotoRepo.SavePhoto(photo)
 	return nil
 }
 
-func (p *PhotoService) UpdatePhoto(request UpdatePhotoRequest) error {
+func (p *PhotoService) UpdatePhoto(photoId uint, request UpdatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
 		return err
 	}
-	photoData, err := p.PhotoRepo.FindByIdPhoto(request.ID)
+	photoData, err := p.PhotoRepo.FindByIdPhoto(photoId)
 	if err != nil {
 		return err
 	}
 	photoData.Title = request.Title
 	photoData.Caption = request.Caption
 	photoData.PhotoUrl = request.PhotoURL
-	p.PhotoRepo.UpdatePhoto(photoData)
+	p.PhotoRepo.UpdatePhoto(photoId, photoData)
 	return nil
 
 }
@@ -70,16 +69,6 @@ func (p *PhotoService) FindByIdPhoto(photoId uint) (repository.Photo, error) {
 }
 
 func (p *PhotoService) FindAllPhoto() []repository.Photo {
-	var photos []repository.Photo
 	result := p.PhotoRepo.FindAllPhoto()
-	for _, value := range result {
-		photo := repository.Photo{
-			Title:    value.Title,
-			Caption:  value.Caption,
-			PhotoUrl: value.PhotoUrl,
-			UserId:   value.UserId,
-		}
-		photos = append(photos, photo)
-	}
-	return photos
+	return result
 }
