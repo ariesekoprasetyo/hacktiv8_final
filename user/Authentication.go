@@ -18,8 +18,8 @@ func (a *Authz) Login(request controller.LoginUsersRequest) (string, error) {
 	if err != nil {
 		return "", errors.New("incorrect credential")
 	}
-	verify_error := controller.VerifyPassword(result.Password, request.Password)
-	if verify_error != nil {
+	verifyError := controller.VerifyPassword(result.Password, request.Password)
+	if verifyError != nil {
 		return "", errors.New("invalid username or password")
 	}
 	//Generate Token
@@ -27,7 +27,8 @@ func (a *Authz) Login(request controller.LoginUsersRequest) (string, error) {
 	if errToken != nil {
 		return "", errToken
 	}
-	return token, nil
+	tokenFinal := "Bearer " + token
+	return tokenFinal, nil
 }
 
 func (a *Authz) Register(request controller.CreateUsersRequest) error {
@@ -35,7 +36,7 @@ func (a *Authz) Register(request controller.CreateUsersRequest) error {
 	if err != nil {
 		return err
 	}
-	hashedPassword, err := controller.HashPassword(request.Password)
+	hashedPassword, _ := controller.HashPassword(request.Password)
 	if err != nil {
 		return err
 	}

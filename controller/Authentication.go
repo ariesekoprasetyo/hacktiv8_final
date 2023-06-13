@@ -7,14 +7,21 @@ import (
 
 type CreateUsersRequest struct {
 	Username string `validate:"required" json:"username"`
-	Email    string `validate:"required" json:"email"`
-	Password string `validate:"required,email" json:"password"`
-	Age      int    `validate:"required,min=8" json:"age"`
+	Email    string `validate:"required,email" json:"email"`
+	Password string `validate:"required" json:"password"`
+	Age      int    `validate:"required,gte=8" json:"age"`
 }
 
 type LoginUsersRequest struct {
 	Username string `validate:"required" json:"username"`
 	Password string `validate:"required" json:"password"`
+}
+
+type Response struct {
+	Code    int         `json:"code"`
+	Status  string      `json:"status"`
+	Message string      `json:"message"`
+	Data    interface{} `json:"data,omitempty"`
 }
 
 type AuthController struct {
@@ -32,7 +39,7 @@ func (ac *AuthController) Login(c *gin.Context) {
 	token, err := ac.Service.Login(bodyReqLogin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
 	}
 	c.JSON(http.StatusOK, gin.H{
@@ -48,18 +55,20 @@ func (ac *AuthController) Register(c *gin.Context) {
 	err := c.ShouldBind(&bodyReqRegister)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	err = ac.Service.Register(bodyReqRegister)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"status":  "Ok",
-		"message": "Successfully Created user !",
-		"data":    nil,
+		"Status":  "Ok",
+		"Message": "Successfully Created user !",
+		"Data":    nil,
 	})
 }
