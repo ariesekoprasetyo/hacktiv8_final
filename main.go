@@ -10,6 +10,7 @@ import (
 	"hacktiv8_final/posts"
 	"hacktiv8_final/repository"
 	"hacktiv8_final/router"
+	"hacktiv8_final/user"
 	"log"
 	"net/http"
 	"os"
@@ -24,6 +25,8 @@ func main() {
 		log.Fatal(err)
 	}
 
+	_ = &controller.GenerateTokenStruct{JWTSecret: os.Getenv("JWT_SECRET")}
+
 	//Setup DB And Migration
 	setupDB()
 	validate := validator.New()
@@ -31,6 +34,7 @@ func main() {
 	//Init Repo
 	commentRepo := repository.CommentRepo{Db: DB}
 	photoRepo := repository.PhotoRepo{Db: DB}
+	userRepo := repository.UsersRepo{Db: DB}
 
 	//Init Domain
 	commentService := posts.CommentService{
@@ -42,11 +46,17 @@ func main() {
 		Validate:  validate,
 	}
 
+	userService := user.Authz{
+		AuthRepo: &userRepo,
+		Validate: validate,
+	}
+
 	//Init Controller
 	commentController := controller.CommentController{Service: &commentService}
 	photoController := controller.PhotoController{Service: &photoService}
+	authController := controller.AuthController{Service: &userService}
 
-	routes := router.NewRouter(&commentController, &photoController)
+	routes := router.NewRouter(&commentController, &photoController, &authController)
 
 	server := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),

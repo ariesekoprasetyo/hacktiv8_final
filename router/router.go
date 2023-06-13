@@ -21,7 +21,7 @@ func CORSMiddleware(c *gin.Context) {
 	c.Next()
 }
 
-func NewRouter(commentController *controller.CommentController, photoController *controller.PhotoController) *gin.Engine {
+func NewRouter(commentController *controller.CommentController, photoController *controller.PhotoController, authController *controller.AuthController) *gin.Engine {
 	router := gin.Default()
 	router.GET("", func(context *gin.Context) {
 		context.JSON(http.StatusOK, "welcome home")
@@ -48,7 +48,11 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			photo.DELETE("/:id", photoController.DeletePhoto)
 			photo.PUT("/", commentController.UpdateComment)
 		}
-		//user := groupRouter.Group("/users/socialmedia")
+		auth := groupRouter.Group("/users/authentication")
+		{
+			auth.POST("/register", authController.Register)
+			auth.POST("/login", authController.Login)
+		}
 
 	}
 	return router
