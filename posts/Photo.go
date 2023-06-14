@@ -22,13 +22,12 @@ type PhotoService struct {
 }
 
 type ResponPhoto struct {
-	ID       uint
 	Title    string
 	Caption  string
 	PhotoUrl string
 	UserID   uint
 	Username string
-	Comment  []repository.Comment
+	Comment  []repository.CommentRespon
 }
 
 func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
@@ -83,7 +82,6 @@ func (p *PhotoService) FindAllPhoto() []ResponPhoto {
 	result := p.PhotoRepo.FindAllPhoto()
 	for _, value := range result {
 		finalResult = append(finalResult, ResponPhoto{
-			ID:       value.ID,
 			Title:    value.Title,
 			Caption:  value.Caption,
 			PhotoUrl: value.PhotoUrl,
