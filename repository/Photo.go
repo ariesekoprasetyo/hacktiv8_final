@@ -34,7 +34,7 @@ func (p PhotoRepo) DeletePhoto(PhotoId uint) {
 
 func (p PhotoRepo) FindByIdPhoto(PhotoId uint) (Photo, error) {
 	var photoById Photo
-	err := p.Db.Preload("User").First(&photoById, PhotoId).Error
+	err := p.Db.Preload("User").Preload("Comment").First(&photoById, PhotoId).Error
 	if err != nil {
 		return photoById, err
 	}

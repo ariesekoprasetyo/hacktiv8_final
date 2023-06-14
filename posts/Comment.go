@@ -6,7 +6,7 @@ import (
 )
 
 type CreateCommentRequest struct {
-	UserId  uint   `json:"user_id" binding:"required"`
+	UserId  uint   `json:"user_id"`
 	PhotoID uint   `json:"photo_id" binding:"required"`
 	Message string `validate:"required" json:"message" binding:"required"`
 }

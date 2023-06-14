@@ -16,23 +16,24 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 	err := c.ShouldBind(&bodyReqComment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
 		return
 	}
 	finalBodyReqComment := posts.CreateCommentRequest{
-		UserId:  uint(c.Keys["userId"].(int)),
+		UserId:  uint(c.Keys["userId"].(uint)),
 		PhotoID: bodyReqComment.PhotoID,
 		Message: bodyReqComment.Message,
 	}
 	err = cc.Service.CreateComment(finalBodyReqComment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"message": "Update Add",
+		"message": "Success Add",
 	})
 }
 

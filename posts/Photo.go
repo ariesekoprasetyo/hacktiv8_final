@@ -21,6 +21,16 @@ type PhotoService struct {
 	Validate  *validator.Validate
 }
 
+type ResponPhoto struct {
+	ID       uint
+	Title    string
+	Caption  string
+	PhotoUrl string
+	UserID   uint
+	Username string
+	Comment  []repository.Comment
+}
+
 func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
 	if err := p.Validate.Struct(request); err != nil {
 		return err
@@ -68,7 +78,19 @@ func (p *PhotoService) FindByIdPhoto(photoId uint) (repository.Photo, error) {
 	return photoByIdResult, nil
 }
 
-func (p *PhotoService) FindAllPhoto() []repository.Photo {
+func (p *PhotoService) FindAllPhoto() []ResponPhoto {
+	var finalResult []ResponPhoto
 	result := p.PhotoRepo.FindAllPhoto()
-	return result
+	for _, value := range result {
+		finalResult = append(finalResult, ResponPhoto{
+			ID:       value.ID,
+			Title:    value.Title,
+			Caption:  value.Caption,
+			PhotoUrl: value.PhotoUrl,
+			UserID:   value.UserID,
+			Username: value.User.Username,
+			Comment:  value.Comment,
+		})
+	}
+	return finalResult
 }

@@ -10,5 +10,5 @@ type PhotoService interface {
 	UpdatePhoto(photoId uint, request posts.UpdatePhotoRequest) error
 	DeletePhoto(photoId uint) error
 	FindByIdPhoto(photoId uint) (repository.Photo, error)
-	FindAllPhoto() []repository.Photo
+	FindAllPhoto() []posts.ResponPhoto
 }

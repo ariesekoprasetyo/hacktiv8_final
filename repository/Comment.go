@@ -9,20 +9,24 @@ type CommentRepo struct {
 }
 
 func (r *CommentRepo) SaveComment(data Comment) {
-	result := r.Db.Create(&data)
-	panic(result.Error)
+	err := r.Db.Create(&data).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (r *CommentRepo) FindAllComment() []Comment {
 	var allComment []Comment
-	result := r.Db.Preload("Users").Preload("Photos").Find(&Comment{})
-	panic(result.Error)
+	err := r.Db.Preload("Photo").Find(&allComment).Error
+	if err != nil {
+		panic(err)
+	}
 	return allComment
 }
 
 func (r *CommentRepo) FindByIdComment(id uint) (Comment, error) {
 	var commentById Comment
-	result := r.Db.First(&commentById, id)
+	result := r.Db.Preload("Photo").First(&commentById, id)
 	if result != nil {
 		return commentById, nil
 	}
