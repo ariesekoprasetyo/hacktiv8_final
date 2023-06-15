@@ -1,6 +1,8 @@
 package posts
 
 import (
+	"errors"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/repository"
 )
@@ -42,10 +44,14 @@ func (cs *CommentService) UpdateComment(commentId uint, request UpdateCommentReq
 	return nil
 }
 
-func (cs *CommentService) DeleteComment(commentId uint) error {
-	_, err := cs.CommentRepo.FindByIdComment(commentId)
+func (cs *CommentService) DeleteCommentById(commentId uint, userId uint) error {
+	result, err := cs.CommentRepo.FindByIdComment(commentId)
 	if err != nil {
 		return err
+	}
+	fmt.Println(result.UserID, userId)
+	if result.UserID != userId {
+		return errors.New("Forbiden")
 	}
 	cs.CommentRepo.DeleteComment(commentId)
 	return nil

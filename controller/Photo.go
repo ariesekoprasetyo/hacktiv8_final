@@ -74,9 +74,9 @@ func (pc *PhotoController) DeletePhoto(c *gin.Context) {
 			"message": err,
 		})
 	}
-	err = pc.Service.DeletePhoto(uint(id))
+	err = pc.Service.DeletePhotoById(uint(id), uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"message": err.Error(),
 		})
 		return

@@ -73,9 +73,9 @@ func (cc *CommentController) DeleteComment(c *gin.Context) {
 		})
 		return
 	}
-	err = cc.Service.DeleteComment(uint(id))
+	err = cc.Service.DeleteCommentById(uint(id), uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(403, gin.H{
 			"message": err.Error(),
 		})
 		return

@@ -1,6 +1,7 @@
 package posts
 
 import (
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/repository"
 )
@@ -60,10 +61,13 @@ func (p *PhotoService) UpdatePhoto(photoId uint, request UpdatePhotoRequest) err
 
 }
 
-func (p *PhotoService) DeletePhoto(photoId uint) error {
-	_, err := p.PhotoRepo.FindByIdPhoto(photoId)
+func (p *PhotoService) DeletePhotoById(photoId uint, userId uint) error {
+	result, err := p.PhotoRepo.FindByIdPhoto(photoId)
 	if err != nil {
 		return err
+	}
+	if result.ID != userId {
+		return errors.New("Forbiden")
 	}
 	p.PhotoRepo.DeletePhoto(photoId)
 	return nil
