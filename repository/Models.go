@@ -19,6 +19,7 @@ type (
 		PhotoUrl  string `gorm:"not null;type:varchar(191)"`
 		UserID    uint   `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
 		User      UserRespon
+		CommentID uint `gorm:"constraint:OnDelete:CASCADE;"`
 		Comment   []CommentRespon
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
@@ -36,8 +37,7 @@ type (
 		ID        uint `gorm:"primaryKey"`
 		UserID    uint `gorm:"constraint:OnDelete:CASCADE;"`
 		User      UserRespon
-		PhotoID   uint `gorm:"constraint:OnDelete:CASCADE;"`
-		Photo     PhotoRespo
+		PhotoID   uint
 		Message   string    `gorm:"not null;type:varchar(191)"`
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
