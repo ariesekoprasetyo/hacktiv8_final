@@ -1,6 +1,7 @@
 package user
 
 import (
+	"errors"
 	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/repository"
 )
@@ -40,7 +41,7 @@ func (s *SocialMediaService) CreateSocialMedia(request SocialMediaRequest) error
 	return nil
 }
 
-func (s *SocialMediaService) UpdateSocialMedia(socialMediaId uint, request SocialMediaUpdate) error {
+func (s *SocialMediaService) UpdateSocialMediaById(socialMediaId uint, request SocialMediaUpdate, userId uint) error {
 	err := s.Validate.Struct(request)
 	if err != nil {
 		return err
@@ -49,15 +50,21 @@ func (s *SocialMediaService) UpdateSocialMedia(socialMediaId uint, request Socia
 	if err != nil {
 		return err
 	}
+	if socialediaData.UserID != userId {
+		return errors.New("forbidden")
+	}
 	socialediaData.Name = request.Name
 	s.SocialMediaRepo.UpdateSocialMedia(socialMediaId, socialediaData)
 	return nil
 }
 
-func (s *SocialMediaService) DeleteSocialMedia(socialMediaId uint) error {
-	_, err := s.SocialMediaRepo.FindByIdSocialMedia(socialMediaId)
+func (s *SocialMediaService) DeleteSocialMediaById(socialMediaId uint, userId uint) error {
+	result, err := s.SocialMediaRepo.FindByIdSocialMedia(socialMediaId)
 	if err != nil {
 		return err
+	}
+	if result.UserID != userId {
+		return errors.New("forbidden")
 	}
 	s.SocialMediaRepo.DeleteSocialMedia(socialMediaId)
 	return nil

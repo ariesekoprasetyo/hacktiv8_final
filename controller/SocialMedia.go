@@ -37,7 +37,7 @@ func (sm *SocialMediaController) CreateSocialMedia(c *gin.Context) {
 	})
 }
 
-func (sm *SocialMediaController) UpdateSocialMedia(c *gin.Context) {
+func (sm *SocialMediaController) UpdateSocialMediaById(c *gin.Context) {
 	bodyReqUpdateSocialMedia := user.SocialMediaUpdate{}
 	err := c.ShouldBind(bodyReqUpdateSocialMedia)
 	if err != nil {
@@ -53,7 +53,7 @@ func (sm *SocialMediaController) UpdateSocialMedia(c *gin.Context) {
 		})
 		return
 	}
-	err = sm.Service.UpdateSocialMedia(uint(id), bodyReqUpdateSocialMedia)
+	err = sm.Service.UpdateSocialMediaById(uint(id), bodyReqUpdateSocialMedia, uint(c.Keys["userId"].(uint)))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -65,7 +65,7 @@ func (sm *SocialMediaController) UpdateSocialMedia(c *gin.Context) {
 	})
 }
 
-func (sm *SocialMediaController) DeleteSocialMedia(c *gin.Context) {
+func (sm *SocialMediaController) DeleteSocialMediaById(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -73,7 +73,7 @@ func (sm *SocialMediaController) DeleteSocialMedia(c *gin.Context) {
 		})
 		return
 	}
-	err = sm.Service.DeleteSocialMedia(uint(id))
+	err = sm.Service.DeleteSocialMediaById(uint(id), uint(c.Keys["userId"].(uint)))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),

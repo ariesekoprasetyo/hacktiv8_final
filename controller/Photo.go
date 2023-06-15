@@ -39,7 +39,7 @@ func (pc *PhotoController) CreatePhoto(c *gin.Context) {
 	})
 }
 
-func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
+func (pc *PhotoController) UpdatePhotoById(c *gin.Context) {
 	bodyReqUpdatePhoto := posts.UpdatePhotoRequest{}
 	err := c.ShouldBind(&bodyReqUpdatePhoto)
 	if err != nil {
@@ -55,7 +55,7 @@ func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
 		})
 		return
 	}
-	err = pc.Service.UpdatePhoto(uint(id), bodyReqUpdatePhoto)
+	err = pc.Service.UpdatePhotoById(uint(id), bodyReqUpdatePhoto, uint(c.Keys["userId"].(uint)))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -67,7 +67,7 @@ func (pc *PhotoController) UpdatePhoto(c *gin.Context) {
 	})
 }
 
-func (pc *PhotoController) DeletePhoto(c *gin.Context) {
+func (pc *PhotoController) DeletePhotoById(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

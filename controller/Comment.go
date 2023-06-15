@@ -37,7 +37,7 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 	})
 }
 
-func (cc *CommentController) UpdateComment(c *gin.Context) {
+func (cc *CommentController) UpdateCommentById(c *gin.Context) {
 	bodyReqUpdateComment := posts.UpdateCommentRequest{}
 	err := c.ShouldBind(&bodyReqUpdateComment)
 	if err != nil {
@@ -53,7 +53,7 @@ func (cc *CommentController) UpdateComment(c *gin.Context) {
 		})
 		return
 	}
-	err = cc.Service.UpdateComment(uint(id), bodyReqUpdateComment)
+	err = cc.Service.UpdateCommentById(uint(id), bodyReqUpdateComment, uint(c.Keys["userId"].(uint)))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -65,7 +65,7 @@ func (cc *CommentController) UpdateComment(c *gin.Context) {
 	})
 }
 
-func (cc *CommentController) DeleteComment(c *gin.Context) {
+func (cc *CommentController) DeleteCommentById(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{

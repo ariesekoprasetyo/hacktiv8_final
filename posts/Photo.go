@@ -45,13 +45,16 @@ func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
 	return nil
 }
 
-func (p *PhotoService) UpdatePhoto(photoId uint, request UpdatePhotoRequest) error {
+func (p *PhotoService) UpdatePhotoById(photoId uint, request UpdatePhotoRequest, userId uint) error {
 	if err := p.Validate.Struct(request); err != nil {
 		return err
 	}
 	photoData, err := p.PhotoRepo.FindByIdPhoto(photoId)
 	if err != nil {
 		return err
+	}
+	if photoData.UserID != userId {
+		return errors.New("forbiden")
 	}
 	photoData.Title = request.Title
 	photoData.Caption = request.Caption
@@ -67,7 +70,7 @@ func (p *PhotoService) DeletePhotoById(photoId uint, userId uint) error {
 		return err
 	}
 	if result.ID != userId {
-		return errors.New("Forbiden")
+		return errors.New("forbiden")
 	}
 	p.PhotoRepo.DeletePhoto(photoId)
 	return nil

@@ -2,7 +2,6 @@ package posts
 
 import (
 	"errors"
-	"fmt"
 	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/repository"
 )
@@ -30,7 +29,7 @@ type CommentService struct {
 	Validate    *validator.Validate
 }
 
-func (cs *CommentService) UpdateComment(commentId uint, request UpdateCommentRequest) error {
+func (cs *CommentService) UpdateCommentById(commentId uint, request UpdateCommentRequest, userId uint) error {
 	err := cs.Validate.Struct(request)
 	if err != nil {
 		return err
@@ -38,6 +37,9 @@ func (cs *CommentService) UpdateComment(commentId uint, request UpdateCommentReq
 	commentData, err := cs.CommentRepo.FindByIdComment(commentId)
 	if err != nil {
 		return err
+	}
+	if commentData.UserID != userId {
+		return errors.New("forbidden")
 	}
 	commentData.Message = request.Message
 	cs.CommentRepo.UpdateComment(commentId, commentData)
@@ -49,7 +51,6 @@ func (cs *CommentService) DeleteCommentById(commentId uint, userId uint) error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(result.UserID, userId)
 	if result.UserID != userId {
 		return errors.New("Forbiden")
 	}

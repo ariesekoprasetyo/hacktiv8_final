@@ -38,8 +38,8 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			comment.POST("", commentController.CreateComment)
 			comment.GET("", commentController.FindAllComment)
 			comment.GET("/:id", commentController.FindByIdComment)
-			comment.DELETE("/:id", commentController.DeleteComment)
-			comment.PUT("/:id", commentController.UpdateComment)
+			comment.DELETE("/:id", commentController.DeleteCommentById)
+			comment.PUT("/:id", commentController.UpdateCommentById)
 		}
 		photo := groupRouter.Group("/posts/photo")
 		photo.Use(controller.DeserializeUser(authController))
@@ -47,8 +47,8 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			photo.POST("", photoController.CreatePhoto)
 			photo.GET("", photoController.FindAllPhoto)
 			photo.GET("/:id", photoController.FindByIdPhoto)
-			photo.DELETE("/:id", photoController.DeletePhoto)
-			photo.PUT("/:id", photoController.UpdatePhoto)
+			photo.DELETE("/:id", photoController.DeletePhotoById)
+			photo.PUT("/:id", photoController.UpdatePhotoById)
 		}
 		socialmedia := groupRouter.Group("/users/socialmedia")
 		socialmedia.Use(controller.DeserializeUser(authController))
@@ -56,8 +56,8 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			socialmedia.POST("", socialMediaController.CreateSocialMedia)
 			socialmedia.GET("", socialMediaController.FindAllSocialMedia)
 			socialmedia.GET("/:id", socialMediaController.FindByIdSocialMedia)
-			socialmedia.DELETE("/:id", socialMediaController.DeleteSocialMedia)
-			socialmedia.PUT("/:id", socialMediaController.UpdateSocialMedia)
+			socialmedia.DELETE("/:id", socialMediaController.DeleteSocialMediaById)
+			socialmedia.PUT("/:id", socialMediaController.UpdateSocialMediaById)
 		}
 		auth := groupRouter.Group("/users/authentication")
 		{
