@@ -2,6 +2,7 @@ package user
 
 import (
 	"errors"
+	"fmt"
 	"github.com/go-playground/validator/v10"
 	"hacktiv8_final/repository"
 )
@@ -46,15 +47,16 @@ func (s *SocialMediaService) UpdateSocialMediaById(socialMediaId uint, request S
 	if err != nil {
 		return err
 	}
-	socialediaData, err := s.SocialMediaRepo.FindByIdSocialMedia(socialMediaId)
+	result, err := s.SocialMediaRepo.FindByIdSocialMedia(socialMediaId)
+	fmt.Println(result.UserID, userId)
 	if err != nil {
 		return err
 	}
-	if socialediaData.UserID != userId {
+	if result.UserID != userId {
 		return errors.New("forbidden")
 	}
-	socialediaData.Name = request.Name
-	s.SocialMediaRepo.UpdateSocialMedia(socialMediaId, socialediaData)
+	result.Name = request.Name
+	s.SocialMediaRepo.UpdateSocialMedia(socialMediaId, result)
 	return nil
 }
 

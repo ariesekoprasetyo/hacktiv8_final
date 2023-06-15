@@ -55,7 +55,7 @@ func (cc *CommentController) UpdateCommentById(c *gin.Context) {
 	}
 	err = cc.Service.UpdateCommentById(uint(id), bodyReqUpdateComment, uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"message": err.Error(),
 		})
 		return

@@ -39,10 +39,10 @@ func (sm *SocialMediaController) CreateSocialMedia(c *gin.Context) {
 
 func (sm *SocialMediaController) UpdateSocialMediaById(c *gin.Context) {
 	bodyReqUpdateSocialMedia := user.SocialMediaUpdate{}
-	err := c.ShouldBind(bodyReqUpdateSocialMedia)
+	err := c.ShouldBind(&bodyReqUpdateSocialMedia)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
 		return
 	}
@@ -55,7 +55,7 @@ func (sm *SocialMediaController) UpdateSocialMediaById(c *gin.Context) {
 	}
 	err = sm.Service.UpdateSocialMediaById(uint(id), bodyReqUpdateSocialMedia, uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"message": err.Error(),
 		})
 		return
@@ -75,7 +75,7 @@ func (sm *SocialMediaController) DeleteSocialMediaById(c *gin.Context) {
 	}
 	err = sm.Service.DeleteSocialMediaById(uint(id), uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"message": err.Error(),
 		})
 		return

@@ -9,8 +9,8 @@ import (
 type CreateUsersRequest struct {
 	Username string `validate:"required" json:"username"`
 	Email    string `validate:"required,email" json:"email"`
-	Password string `validate:"required" json:"password"`
-	Age      int    `validate:"required,gte=8" json:"age"`
+	Password string `validate:"required,min=6" json:"password"`
+	Age      int    `validate:"required,min=8" json:"age"`
 }
 
 type LoginUsersRequest struct {

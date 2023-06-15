@@ -57,7 +57,7 @@ func (pc *PhotoController) UpdatePhotoById(c *gin.Context) {
 	}
 	err = pc.Service.UpdatePhotoById(uint(id), bodyReqUpdatePhoto, uint(c.Keys["userId"].(uint)))
 	if err != nil {
-		c.JSON(http.StatusBadRequest, gin.H{
+		c.JSON(http.StatusForbidden, gin.H{
 			"message": err.Error(),
 		})
 		return
