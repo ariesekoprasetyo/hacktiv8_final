@@ -44,12 +44,14 @@ func (cc *CommentController) UpdateComment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
 		})
+		return
 	}
 	err = cc.Service.UpdateComment(bodyReqUpdateComment)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Update Success",
@@ -79,14 +81,16 @@ func (cc *CommentController) FindByIdComment(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	comment, err := cc.Service.FindByIdComment(uint(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
-			"message": err,
+			"message": err.Error(),
 		})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": comment,

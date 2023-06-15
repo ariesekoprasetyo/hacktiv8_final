@@ -22,12 +22,12 @@ type PhotoService struct {
 }
 
 type ResponPhoto struct {
-	Title    string
-	Caption  string
-	PhotoUrl string
-	UserID   uint
-	Username string
-	Comment  []repository.CommentRespon
+	Title    string                     `json:"title"`
+	Caption  string                     `json:"caption"`
+	PhotoUrl string                     `json:"photoUrl"`
+	UserID   uint                       `json:"userID"`
+	Username string                     `json:"username"`
+	Comment  []repository.CommentRespon `json:"comment"`
 }
 
 func (p *PhotoService) CreatePhoto(request CreatePhotoRequest) error {
@@ -69,12 +69,20 @@ func (p *PhotoService) DeletePhoto(photoId uint) error {
 	return nil
 }
 
-func (p *PhotoService) FindByIdPhoto(photoId uint) (repository.Photo, error) {
+func (p *PhotoService) FindByIdPhoto(photoId uint) (ResponPhoto, error) {
+	var finalResult ResponPhoto
 	photoByIdResult, err := p.PhotoRepo.FindByIdPhoto(photoId)
 	if err != nil {
-		return photoByIdResult, err
+		return finalResult, err
 	}
-	return photoByIdResult, nil
+	finalResult.Title = photoByIdResult.Title
+	finalResult.Caption = photoByIdResult.Caption
+	finalResult.PhotoUrl = photoByIdResult.PhotoUrl
+	finalResult.UserID = photoByIdResult.UserID
+	finalResult.Username = photoByIdResult.User.Username
+	finalResult.Comment = photoByIdResult.Comment
+
+	return finalResult, nil
 }
 
 func (p *PhotoService) FindAllPhoto() []ResponPhoto {

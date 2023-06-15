@@ -26,7 +26,7 @@ func (p PhotoRepo) UpdatePhoto(photoId uint, photo Photo) {
 
 func (p PhotoRepo) DeletePhoto(PhotoId uint) {
 	var photo Photo
-	result := p.Db.Where("id = ?", PhotoId).Delete(photo)
+	result := p.Db.Model(&photo).Where("id = ?", PhotoId).Delete(&photo)
 	if result.Error != nil {
 		panic(result.Error)
 	}

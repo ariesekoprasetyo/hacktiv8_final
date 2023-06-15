@@ -16,6 +16,14 @@ type UpdateCommentRequest struct {
 	Message string `validate:"required" json:"message" binding:"required"`
 }
 
+type ResponCommnet struct {
+	UserID  uint                  `json:"userID"`
+	User    repository.UserRespon `json:"user"`
+	PhotoID uint                  `json:"photoID"`
+	Photo   repository.PhotoRespo `json:"photo"`
+	Message string                `json:"message"`
+}
+
 type CommentService struct {
 	CommentRepo RepositoryComment
 	Validate    *validator.Validate
@@ -44,17 +52,37 @@ func (cs *CommentService) DeleteComment(commentId uint) error {
 	return nil
 }
 
-func (cs *CommentService) FindByIdComment(commentId uint) (repository.Comment, error) {
+func (cs *CommentService) FindByIdComment(commentId uint) (ResponCommnet, error) {
+	var finalResult ResponCommnet
 	commentByIdResult, err := cs.CommentRepo.FindByIdComment(commentId)
 	if err != nil {
-		return commentByIdResult, err
+		return finalResult, err
 	}
-	return commentByIdResult, nil
+	finalResult.UserID = commentByIdResult.UserID
+	finalResult.User = commentByIdResult.User
+	finalResult.PhotoID = commentByIdResult.PhotoID
+	finalResult.Photo = commentByIdResult.Photo
+	finalResult.Message = commentByIdResult.Message
+
+	return finalResult, nil
 }
 
-func (cs *CommentService) FindAllComment() []repository.Comment {
-	allComment := cs.CommentRepo.FindAllComment()
-	return allComment
+func (cs *CommentService) FindAllComment() []ResponCommnet {
+	var finalResult []ResponCommnet
+	result := cs.CommentRepo.FindAllComment()
+	for _, value := range result {
+		finalResult = append(
+			finalResult,
+			ResponCommnet{
+				UserID:  value.UserID,
+				User:    value.User,
+				PhotoID: value.PhotoID,
+				Photo:   value.Photo,
+				Message: value.Message,
+			},
+		)
+	}
+	return finalResult
 }
 
 func (cs *CommentService) CreateComment(request CreateCommentRequest) error {

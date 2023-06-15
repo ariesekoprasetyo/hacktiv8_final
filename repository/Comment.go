@@ -17,7 +17,7 @@ func (r *CommentRepo) SaveComment(data Comment) {
 
 func (r *CommentRepo) FindAllComment() []Comment {
 	var allComment []Comment
-	err := r.Db.Preload("Photo").Find(&allComment).Error
+	err := r.Db.Preload("User").Preload("Photo").Find(&allComment).Error
 	if err != nil {
 		panic(err)
 	}
@@ -26,11 +26,11 @@ func (r *CommentRepo) FindAllComment() []Comment {
 
 func (r *CommentRepo) FindByIdComment(id uint) (Comment, error) {
 	var commentById Comment
-	result := r.Db.Preload("Photo").First(&commentById, id)
-	if result != nil {
-		return commentById, nil
+	err := r.Db.Preload("User").Preload("Photo").First(&commentById, id).Error
+	if err != nil {
+		return commentById, err
 	}
-	return commentById, result.Error
+	return commentById, nil
 
 }
 

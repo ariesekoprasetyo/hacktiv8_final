@@ -17,26 +17,27 @@ type (
 		Title     string `gorm:"not null;type:varchar(191)"`
 		Caption   string `gorm:"not null;type:varchar(191)"`
 		PhotoUrl  string `gorm:"not null;type:varchar(191)"`
-		UserID    uint   `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
-		User      User
+		UserID    uint   `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+		User      UserRespon
 		Comment   []CommentRespon
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
 	}
 	SocialMedia struct {
-		ID        uint      `gorm:"primaryKey"`
-		Name      string    `gorm:"not null;type:varchar(191)"`
-		SosmedUrl string    `gorm:"not null;type:varchar(191)"`
-		UserID    uint      `gorm:"foreignKey:UserID;constraint:OnUpdate:CASCADE,OnDelete:SET NULL;"`
+		ID        uint   `gorm:"primaryKey"`
+		Name      string `gorm:"not null;type:varchar(191)"`
+		SosmedUrl string `gorm:"not null;type:varchar(191)"`
+		UserID    uint   `gorm:"constraint:OnDelete:CASCADE;"`
+		User      User
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
 	}
 	Comment struct {
 		ID        uint `gorm:"primaryKey"`
-		UserID    uint `gorm:"foreignKey:UserID;constraint:OnUpdate:SET NULL,OnDelete:CASCADE;"`
+		UserID    uint `gorm:"constraint:OnDelete:CASCADE;"`
 		User      UserRespon
-		PhotoID   uint `gorm:"foreignKey:PhotoID;constraint:OnUpdate:SET NULL,OnDelete:CASCADE;"`
-		Photo     Photo
+		PhotoID   uint `gorm:"constraint:OnDelete:CASCADE;"`
+		Photo     PhotoRespo
 		Message   string    `gorm:"not null;type:varchar(191)"`
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
@@ -44,10 +45,10 @@ type (
 )
 
 type CommentRespon struct {
-	PhotoID uint
-	Message string
-	UserID  uint
-	User    UserRespon
+	ID      uint   `json:"id"`
+	PhotoID uint   `json:"photo_id"`
+	Message string `json:"message"`
+	UserID  uint   `json:"user_id"`
 }
 
 func (CommentRespon) TableName() string {
@@ -55,10 +56,22 @@ func (CommentRespon) TableName() string {
 }
 
 type UserRespon struct {
-	ID       uint
-	Username string
+	ID       uint   `json:"id"`
+	Username string `json:"username"`
+	Email    string `json:"email"`
 }
 
 func (UserRespon) TableName() string {
 	return "users"
+}
+
+type PhotoRespo struct {
+	ID       uint   `json:"id"`
+	PhotoUrl string `json:"photoUrl"`
+	Title    string `json:"title"`
+	Caption  string `json:"caption"`
+}
+
+func (PhotoRespo) TableName() string {
+	return "photos"
 }
