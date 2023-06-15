@@ -25,18 +25,18 @@ func DeserializeUser(controller *AuthController) gin.HandlerFunc {
 
 		sub, err := controller.Service.ValidateToken(token)
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail 1", "message": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": err.Error()})
 			return
 		}
 
 		id, errId := strconv.ParseUint(fmt.Sprint(sub), 10, 64)
 		if errId != nil {
-			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail 2", "message": err.Error()})
+			ctx.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"status": "fail", "message": err.Error()})
 			return
 		}
 		result, err := controller.Service.FindUserById(uint(id))
 		if err != nil {
-			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail 3", "message": "the user belonging to this token no logger exists"})
+			ctx.AbortWithStatusJSON(http.StatusForbidden, gin.H{"status": "fail", "message": "the user belonging to this token no logger exists"})
 			return
 		}
 

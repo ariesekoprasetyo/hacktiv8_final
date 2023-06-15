@@ -58,7 +58,6 @@ func (ac *AuthController) Register(c *gin.Context) {
 		})
 		return
 	}
-	log.Print("Masuk Sini")
 	c.JSON(http.StatusOK, gin.H{
 		"Status":  "Ok",
 		"Message": "Successfully Created user !",
