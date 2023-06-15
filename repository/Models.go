@@ -24,13 +24,13 @@ type (
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
 	}
 	SocialMedia struct {
-		ID        uint   `gorm:"primaryKey"`
-		Name      string `gorm:"not null;type:varchar(191)"`
-		SosmedUrl string `gorm:"not null;type:varchar(191)"`
-		UserID    uint   `gorm:"constraint:OnDelete:CASCADE;"`
-		User      UserRespon
-		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
-		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
+		ID        uint       `gorm:"primaryKey"`
+		Name      string     `gorm:"not null;type:varchar(191)"`
+		SosmedUrl string     `gorm:"not null;type:varchar(191)"`
+		UserID    uint       `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+		User      UserRespon `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+		CreatedAt time.Time  `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
+		UpdatedAt time.Time  `gorm:"type:timestamp(0);default:null"`
 	}
 	Comment struct {
 		ID        uint `gorm:"primaryKey"`

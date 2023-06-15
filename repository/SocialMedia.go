@@ -7,24 +7,30 @@ type SocialMediaRepo struct {
 }
 
 func (s *SocialMediaRepo) SaveSocialMedia(SocialMedia SocialMedia) {
-	result := s.Db.Create(&SocialMedia)
-	panic(result.Error)
+	err := s.Db.Create(&SocialMedia).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (s *SocialMediaRepo) UpdateSocialMedia(socialMediaId uint, SocialMedia SocialMedia) {
-	result := s.Db.Model(&SocialMedia).Where("id = ?", socialMediaId).Updates(SocialMedia)
-	panic(result.Error)
+	err := s.Db.Model(&SocialMedia).Where("id = ?", socialMediaId).Updates(SocialMedia).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
-func (s *SocialMediaRepo) DeleteSocialMedia(SocialMediaId uint) {
+func (s *SocialMediaRepo) DeleteSocialMedia(id uint) {
 	var sosialMedia SocialMedia
-	result := s.Db.Where("id = ?", SocialMediaId).Delete(&sosialMedia)
-	panic(result.Error)
+	err := s.Db.Where("id = ?", id).Delete(&sosialMedia).Error
+	if err != nil {
+		panic(err)
+	}
 }
 
 func (s *SocialMediaRepo) FindByIdSocialMedia(SocialMediaId uint) (SocialMedia, error) {
 	var socialMediaById SocialMedia
-	err := s.Db.Preload("User").First(socialMediaById, SocialMediaId).Error
+	err := s.Db.Preload("User").First(&socialMediaById, SocialMediaId).Error
 	if err != nil {
 		return socialMediaById, err
 	}

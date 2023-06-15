@@ -31,13 +31,14 @@ func (r *CommentRepo) FindByIdComment(id uint) (Comment, error) {
 		return commentById, err
 	}
 	return commentById, nil
-
 }
 
 func (r *CommentRepo) DeleteComment(id uint) {
 	var comment Comment
-	result := r.Db.Where("id = ?", id).Delete(&comment)
-	panic(result.Error)
+	err := r.Db.Where("id = ?", id).Delete(&comment).Error
+	if err != nil {
+		panic(err)
+	}
 
 }
 
