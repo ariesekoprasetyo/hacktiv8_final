@@ -2,30 +2,30 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
-	"hacktiv8_final/posts"
+	"hacktiv8_final/user"
 	"net/http"
 	"strconv"
 )
 
-type CommentController struct {
-	Service CommentService
+type SocialMediaController struct {
+	Service SocialMediaService
 }
 
-func (cc *CommentController) CreateComment(c *gin.Context) {
-	bodyReqComment := posts.CreateCommentRequest{}
-	err := c.ShouldBind(&bodyReqComment)
+func (sm *SocialMediaController) CreateSocialMedia(c *gin.Context) {
+	bodyReqSocialMedia := user.SocialMediaRequest{}
+	err := c.ShouldBind(&bodyReqSocialMedia)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
 		})
 		return
 	}
-	finalBodyReqComment := posts.CreateCommentRequest{
-		UserId:  uint(c.Keys["userId"].(uint)),
-		PhotoID: bodyReqComment.PhotoID,
-		Message: bodyReqComment.Message,
+	finalBodyReqSocialMedia := user.SocialMediaRequest{
+		Name:      bodyReqSocialMedia.Name,
+		SosmedUrl: bodyReqSocialMedia.SosmedUrl,
+		UserId:    uint(c.Keys["userId"].(uint)),
 	}
-	err = cc.Service.CreateComment(finalBodyReqComment)
+	err = sm.Service.CreateSocialMedia(finalBodyReqSocialMedia)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -37,9 +37,9 @@ func (cc *CommentController) CreateComment(c *gin.Context) {
 	})
 }
 
-func (cc *CommentController) UpdateComment(c *gin.Context) {
-	bodyReqUpdateComment := posts.UpdateCommentRequest{}
-	err := c.ShouldBind(&bodyReqUpdateComment)
+func (sm *SocialMediaController) UpdateSocialMedia(c *gin.Context) {
+	bodyReqUpdateSocialMedia := user.SocialMediaUpdate{}
+	err := c.ShouldBind(bodyReqUpdateSocialMedia)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err,
@@ -53,7 +53,7 @@ func (cc *CommentController) UpdateComment(c *gin.Context) {
 		})
 		return
 	}
-	err = cc.Service.UpdateComment(uint(id), bodyReqUpdateComment)
+	err = sm.Service.UpdateSocialMedia(uint(id), bodyReqUpdateSocialMedia)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -65,7 +65,7 @@ func (cc *CommentController) UpdateComment(c *gin.Context) {
 	})
 }
 
-func (cc *CommentController) DeleteComment(c *gin.Context) {
+func (sm *SocialMediaController) DeleteSocialMedia(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -73,7 +73,7 @@ func (cc *CommentController) DeleteComment(c *gin.Context) {
 		})
 		return
 	}
-	err = cc.Service.DeleteComment(uint(id))
+	err = sm.Service.DeleteSocialMedia(uint(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -85,7 +85,7 @@ func (cc *CommentController) DeleteComment(c *gin.Context) {
 	})
 }
 
-func (cc *CommentController) FindByIdComment(c *gin.Context) {
+func (sm *SocialMediaController) FindByIdSocialMedia(c *gin.Context) {
 	id, err := strconv.ParseUint(c.Params.ByName("id"), 10, 64)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
@@ -93,7 +93,7 @@ func (cc *CommentController) FindByIdComment(c *gin.Context) {
 		})
 		return
 	}
-	comment, err := cc.Service.FindByIdComment(uint(id))
+	socialmedia, err := sm.Service.FindByIdSocialMedia(uint(id))
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{
 			"message": err.Error(),
@@ -101,12 +101,12 @@ func (cc *CommentController) FindByIdComment(c *gin.Context) {
 		return
 	}
 	c.JSON(http.StatusOK, gin.H{
-		"data": comment,
+		"data": socialmedia,
 	})
 }
 
-func (cc *CommentController) FindAllComment(c *gin.Context) {
-	result := cc.Service.FindAllComment()
+func (sm *SocialMediaController) FindAllSocialMedia(c *gin.Context) {
+	result := sm.Service.FindAllSocialMedia()
 	c.JSON(http.StatusOK, gin.H{
 		"data": result,
 	})

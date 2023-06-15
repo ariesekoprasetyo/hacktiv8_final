@@ -33,6 +33,7 @@ func main() {
 	commentRepo := repository.CommentRepo{Db: DB}
 	photoRepo := repository.PhotoRepo{Db: DB}
 	userRepo := repository.UsersRepo{Db: DB}
+	socialMediaRepo := repository.SocialMediaRepo{Db: DB}
 
 	//Init Domain
 	commentService := posts.CommentService{
@@ -50,12 +51,18 @@ func main() {
 		JwtSecret: os.Getenv("JWT_SECRET"),
 	}
 
+	socialMediaService := user.SocialMediaService{
+		SocialMediaRepo: &socialMediaRepo,
+		Validate:        validate,
+	}
+
 	//Init Controller
 	commentController := controller.CommentController{Service: &commentService}
 	photoController := controller.PhotoController{Service: &photoService}
 	authController := controller.AuthController{Service: &userService}
+	socialMediaController := controller.SocialMediaController{Service: &socialMediaService}
 
-	routes := router.NewRouter(&commentController, &photoController, &authController)
+	routes := router.NewRouter(&commentController, &photoController, &authController, &socialMediaController)
 
 	server := &http.Server{
 		Addr:           ":" + os.Getenv("PORT"),

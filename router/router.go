@@ -21,7 +21,7 @@ func CORSMiddleware(c *gin.Context) {
 	c.Next()
 }
 
-func NewRouter(commentController *controller.CommentController, photoController *controller.PhotoController, authController *controller.AuthController) *gin.Engine {
+func NewRouter(commentController *controller.CommentController, photoController *controller.PhotoController, authController *controller.AuthController, socialMediaController *controller.SocialMediaController) *gin.Engine {
 	router := gin.Default()
 	router.GET("", func(c *gin.Context) {
 		c.JSON(http.StatusOK, "welcome home")
@@ -39,7 +39,7 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			comment.GET("", commentController.FindAllComment)
 			comment.GET("/:id", commentController.FindByIdComment)
 			comment.DELETE("/:id", commentController.DeleteComment)
-			comment.PUT("", commentController.UpdateComment)
+			comment.PUT("/:id", commentController.UpdateComment)
 		}
 		photo := groupRouter.Group("/posts/photo")
 		photo.Use(controller.DeserializeUser(authController))
@@ -49,6 +49,15 @@ func NewRouter(commentController *controller.CommentController, photoController 
 			photo.GET("/:id", photoController.FindByIdPhoto)
 			photo.DELETE("/:id", photoController.DeletePhoto)
 			photo.PUT("/:id", photoController.UpdatePhoto)
+		}
+		socialmedia := groupRouter.Group("/users/socialmedia")
+		socialmedia.Use(controller.DeserializeUser(authController))
+		{
+			socialmedia.POST("", socialMediaController.CreateSocialMedia)
+			socialmedia.GET("", socialMediaController.FindAllSocialMedia)
+			socialmedia.GET("/:id", socialMediaController.FindByIdSocialMedia)
+			socialmedia.DELETE("/:id", socialMediaController.DeleteSocialMedia)
+			socialmedia.PUT("/:id", socialMediaController.UpdateSocialMedia)
 		}
 		auth := groupRouter.Group("/users/authentication")
 		{

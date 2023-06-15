@@ -41,7 +41,9 @@ func (r *CommentRepo) DeleteComment(id uint) {
 
 }
 
-func (r *CommentRepo) UpdateComment(comment Comment) {
-	result := r.Db.Model(&comment).Where("id = ?", comment.ID).Updates(comment)
-	panic(result.Error)
+func (r *CommentRepo) UpdateComment(commentId uint, comment Comment) {
+	err := r.Db.Model(&comment).Where("id = ?", commentId).Updates(comment).Error
+	if err != nil {
+		panic(err)
+	}
 }

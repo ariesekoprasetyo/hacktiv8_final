@@ -6,7 +6,7 @@ import (
 
 type CommentService interface {
 	CreateComment(request posts.CreateCommentRequest) error
-	UpdateComment(request posts.UpdateCommentRequest) error
+	UpdateComment(commentId uint, request posts.UpdateCommentRequest) error
 	DeleteComment(commentId uint) error
 	FindByIdComment(commentId uint) (posts.ResponCommnet, error)
 	FindAllComment() []posts.ResponCommnet

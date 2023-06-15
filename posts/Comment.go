@@ -12,7 +12,6 @@ type CreateCommentRequest struct {
 }
 
 type UpdateCommentRequest struct {
-	ID      uint   `json:"id" binding:"required"`
 	Message string `validate:"required" json:"message" binding:"required"`
 }
 
@@ -29,17 +28,17 @@ type CommentService struct {
 	Validate    *validator.Validate
 }
 
-func (cs *CommentService) UpdateComment(request UpdateCommentRequest) error {
+func (cs *CommentService) UpdateComment(commentId uint, request UpdateCommentRequest) error {
 	err := cs.Validate.Struct(request)
 	if err != nil {
 		return err
 	}
-	commentData, err := cs.CommentRepo.FindByIdComment(request.ID)
+	commentData, err := cs.CommentRepo.FindByIdComment(commentId)
 	if err != nil {
 		return err
 	}
 	commentData.Message = request.Message
-	cs.CommentRepo.UpdateComment(commentData)
+	cs.CommentRepo.UpdateComment(commentId, commentData)
 	return nil
 }
 

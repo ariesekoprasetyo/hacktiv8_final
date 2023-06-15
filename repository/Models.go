@@ -17,9 +17,8 @@ type (
 		Title     string `gorm:"not null;type:varchar(191)"`
 		Caption   string `gorm:"not null;type:varchar(191)"`
 		PhotoUrl  string `gorm:"not null;type:varchar(191)"`
-		UserID    uint   `gorm:"foreignKey:UserID;constraint:OnDelete:CASCADE;"`
+		UserID    uint
 		User      UserRespon
-		CommentID uint `gorm:"constraint:OnDelete:CASCADE;"`
 		Comment   []CommentRespon
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
@@ -29,18 +28,19 @@ type (
 		Name      string `gorm:"not null;type:varchar(191)"`
 		SosmedUrl string `gorm:"not null;type:varchar(191)"`
 		UserID    uint   `gorm:"constraint:OnDelete:CASCADE;"`
-		User      User
+		User      UserRespon
 		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
 		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
 	}
 	Comment struct {
 		ID        uint `gorm:"primaryKey"`
-		UserID    uint `gorm:"constraint:OnDelete:CASCADE;"`
+		UserID    uint
 		User      UserRespon
-		PhotoID   uint
-		Message   string    `gorm:"not null;type:varchar(191)"`
-		CreatedAt time.Time `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
-		UpdatedAt time.Time `gorm:"type:timestamp(0);default:null"`
+		PhotoID   uint       `gorm:"foreignKey:PhotoID;constraint:OnDelete:CASCADE;"`
+		Photo     PhotoRespo `gorm:"foreignKey:PhotoID;constraint:OnDelete:CASCADE;"`
+		Message   string     `gorm:"not null;type:varchar(191)"`
+		CreatedAt time.Time  `gorm:"type:timestamp(0);default:CURRENT_TIMESTAMP"`
+		UpdatedAt time.Time  `gorm:"type:timestamp(0);default:null"`
 	}
 )
 

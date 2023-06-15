@@ -11,8 +11,8 @@ func (s *SocialMediaRepo) SaveSocialMedia(SocialMedia SocialMedia) {
 	panic(result.Error)
 }
 
-func (s *SocialMediaRepo) UpdateSocialMedia(SocialMedia SocialMedia) {
-	result := s.Db.Model(&SocialMedia).Where("id = ?", SocialMedia.ID).Updates(SocialMedia)
+func (s *SocialMediaRepo) UpdateSocialMedia(socialMediaId uint, SocialMedia SocialMedia) {
+	result := s.Db.Model(&SocialMedia).Where("id = ?", socialMediaId).Updates(SocialMedia)
 	panic(result.Error)
 }
 
@@ -23,11 +23,19 @@ func (s *SocialMediaRepo) DeleteSocialMedia(SocialMediaId uint) {
 }
 
 func (s *SocialMediaRepo) FindByIdSocialMedia(SocialMediaId uint) (SocialMedia, error) {
-	//TODO implement me
-	panic("implement me")
+	var socialMediaById SocialMedia
+	err := s.Db.Preload("User").First(socialMediaById, SocialMediaId).Error
+	if err != nil {
+		return socialMediaById, err
+	}
+	return socialMediaById, nil
 }
 
 func (s *SocialMediaRepo) FindAllSocialMedia() []SocialMedia {
-	//TODO implement me
-	panic("implement me")
+	var socialmedia []SocialMedia
+	err := s.Db.Preload("User").Find(&socialmedia).Error
+	if err != nil {
+		panic(err)
+	}
+	return socialmedia
 }
