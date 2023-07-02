@@ -3,7 +3,6 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"hacktiv8_final/user"
-	"log"
 	"net/http"
 )
 

@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/go-playground/validator/v10"
-	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"hacktiv8_final/controller"
@@ -20,10 +19,6 @@ import (
 var DB *gorm.DB
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	//Setup DB And Migration
 	setupDB()

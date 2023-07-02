@@ -1,0 +1,40 @@
+version: '3.8'
+services:
+  db:
+    container_name: postgresql
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: aries
+      POSTGRES_DB: hacktiv8
+    ports:
+      - 5432:5432
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - network_example
+  api:
+    build: .
+    restart: on-failure
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      - PORT=3000
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=aries
+      - DB_NAME=hacktiv8
+      - JWT_SECRET = 4121353k0pr453ty0
+    ports:
+      - 3000:3000
+    networks:
+      - network_example
+
+networks:
+  network_example:
+    name: network_example
+    driver: bridge
