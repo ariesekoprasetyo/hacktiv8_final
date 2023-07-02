@@ -12,8 +12,6 @@ services:
       - 5432:5432
     volumes:
       - ./data:/var/lib/postgresql/data
-    networks:
-      - network_example
   api:
     build: .
     restart: on-failure
@@ -31,10 +29,3 @@ services:
       - JWT_SECRET = 4121353k0pr453ty0
     ports:
       - 3000:3000
-    networks:
-      - network_example
-
-networks:
-  network_example:
-    name: network_example
-    driver: bridge
