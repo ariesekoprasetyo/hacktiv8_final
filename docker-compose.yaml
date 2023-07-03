@@ -1,8 +1,8 @@
 version: '3.8'
 services:
   db:
-    container_name: postgresql
-    image: postgres
+    container_name: postgres
+    image: postgres:latest
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -11,13 +11,16 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - ./data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
+    networks:
+      - example-network
+
   api:
+    container_name: go_crud
+    image: "mongol2/gocrud"
     build: .
     restart: on-failure
     depends_on:
-      - db
-    links:
       - db
     environment:
       - PORT=3000
@@ -26,6 +29,13 @@ services:
       - DB_USER=postgres
       - DB_PASSWORD=aries
       - DB_NAME=hacktiv8
-      - JWT_SECRET = 4121353k0pr453ty0
+      - JWT_SECRET=4121353k0pr453ty0
     ports:
       - 3000:3000
+    networks:
+      - example-network
+
+networks:
+  example-network:
+volumes:
+  postgres-data:
