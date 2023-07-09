@@ -36,7 +36,7 @@ func main() {
 		Validate:    validate,
 	}
 	photoService := posts.PhotoService{
-		PhotoRepo: photoRepo,
+		PhotoRepo: &photoRepo,
 		Validate:  validate,
 	}
 
